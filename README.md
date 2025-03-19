@@ -1,6 +1,11 @@
-# IT-Project-1 Current Version 0.2.0 (Please update version number after Pull request approved)
+# IT-Project-1
+Current Version 0.2.0
 
-Rule #1 of fight club is to have fun and be yourself!
+(Please update version number
+after Pull request approved)
+
+//Rule #1 of fight club is
+to have fun and be yourself!//
 
 ⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⣠⠾⠛⠶⣄⢀⣠⣤⠴⢦⡀⠀⠀⠀⠀
 ⠀⠀⠀⢠⡿⠉⠉⠉⠛⠶⠶⠖⠒⠒⣾⠋⠀⢀⣀⣙⣯⡁⠀⠀⠀⣿⠀⠀⠀⠀
