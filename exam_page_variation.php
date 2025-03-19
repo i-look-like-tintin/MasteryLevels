@@ -284,6 +284,9 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt-stdlib.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($subject); ?> Exam - Question <?php echo $questionNumber; ?></title>
@@ -448,22 +451,81 @@ $conn->close();
             <p><?php echo htmlspecialchars($question['question']); ?></p>
 
             <div class="question-options">
-                <label>
-                    <input type="radio" name="selected_option" value="A" <?php echo ($previousAnswer === 'a') ? 'checked' : ''; ?> onchange="saveAnswer('A')">
-                    <?php echo htmlspecialchars($question['option_a']); ?>
-                </label>
-                <label>
-                    <input type="radio" name="selected_option" value="B" <?php echo ($previousAnswer === 'b') ? 'checked' : ''; ?> onchange="saveAnswer('B')">
-                    <?php echo htmlspecialchars($question['option_b']); ?>
-                </label>
-                <label>
-                    <input type="radio" name="selected_option" value="C" <?php echo ($previousAnswer === 'c') ? 'checked' : ''; ?> onchange="saveAnswer('C')">
-                    <?php echo htmlspecialchars($question['option_c']); ?>
-                </label>
-                <label>
-                    <input type="radio" name="selected_option" value="D" <?php echo ($previousAnswer === 'd') ? 'checked' : ''; ?> onchange="saveAnswer('D')">
-                    <?php echo htmlspecialchars($question['option_d']); ?>
-                </label>
+                <h1>Python Code Instruction Tool</h1>
+                <div id="instructions">
+                    <h2>Instructions</h2>
+                    <p>Develop a general function to take the radius of a circle as input, and return its area:</p>
+                    <ul>
+                        <li>The math module is already imported for you.</li>
+                        <li>Use the code editor below to develop your function.</li>
+                        <li>Copy+Paste your function into the code validator below when you have a solution. </li>
+                    </ul>
+                </div>
+                <iframe src="https://trinket.io/embed/python/ce7a0369bfbf?runOption=run" width="100%" height="356" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
+                <script type="text/javascript"> 
+
+                var randInt = Math.floor(Math.random()*10);
+                console.log("randInt: "+randInt);
+                var mypre = "";
+                function outf(text) { 
+                    mypre = text; 
+	                console.log(text);
+	                validate();
+                }
+                function validate(){
+	                var checkArea = (Math.PI*(randInt*randInt));
+	                console.error(checkArea);
+	                console.error(mypre);
+	                console.error("difference: "+(Math.abs(Number(checkArea)-Number(mypre))));
+	                if (Math.abs(Number(checkArea)-Number(mypre)) < 0.01){
+		                document.getElementById("output").innerHTML = "Correct Solution!";
+	                }
+	                else document.getElementById("output").innerHTML = "Incorrect Solution!";
+                } 
+                function builtinRead(x) {
+                    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+                    throw "File not found: '" + x + "'";
+                return Sk.builtinFiles["files"][x];
+                }
+                function runit() { 
+                    var prog = document.getElementById("yourcode").value;
+                    const input = prog;
+                    const match = input.match(/^\s*def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/m);
+	                if (match) {
+		                console.log(match[1]); // Expected output: circle_area
+	                } else {
+		                console.log("No function definition found.");
+	                }
+                    ///	SPECIFIC CHECKS ///	
+                    prog += "\nprint("+match[1]+"("+randInt+"))";
+                    console.log(prog);
+                    ///	SPECIFIC CHECKS ///
+   
+                    var mypre = document.getElementById("output"); 
+                    mypre.innerHTML = ''; 
+                    Sk.pre = "output";
+                    Sk.configure({output:outf, read:builtinRead}); 
+                    (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
+                    var myPromise = Sk.misceval.asyncToPromise(function() {
+                    return Sk.importMainWithBody("<stdin>", false, prog, true);
+                    });
+                    myPromise.then(function(mod) {
+                    console.log('success');
+                    },
+                    function(err) {
+                        console.log(err.toString());
+                    });
+                } 
+</script> 
+
+<h2>Code Validator</h2>
+<form> 
+<textarea id="yourcode" cols="40" rows="10"></textarea><br /> 
+<button type="button" onclick="runit()">Validate</button> 
+</form> 
+<pre id="output" ></pre> 
+<!-- If you want turtle graphics include a canvas -->
+<div id="mycanvas"></div> 
             </div>
 
             <div class="navigation-buttons">

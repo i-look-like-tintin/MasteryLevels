@@ -97,7 +97,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "No account found with that email.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
