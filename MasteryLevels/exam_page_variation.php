@@ -380,6 +380,72 @@ $conn->close();
         .retake-exam-btn:hover {
             background-color: #e0a800;
         }
+        /* AI CHAT TESTING*/
+        /* Chat bubble button */
+        #chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Chat window */
+        #chat-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat messages */
+        #chat-messages {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        /* Input field */
+        #chat-input {
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+        }
+
+        #chat-input input {
+            flex: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #chat-input button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         /* AI CHAT TESTING*/
     </style>
     <script>
         // AJAX function to save the selected answer
@@ -545,5 +611,49 @@ $conn->close();
         </div>
     </form>
 </div>
+<!-- Chat Bubble -->
+<div id="chat-bubble">💬</div>
+
+<!-- Chat Window -->
+<div id="chat-window">
+    <div id="chat-messages"></div>
+    <div id="chat-input">
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById("chat-bubble").addEventListener("click", function() {
+        let chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display = (chatWindow.style.display === "none" || chatWindow.style.display === "") ? "flex" : "none";
+    });
+
+    function sendMessage() {
+        let userInput = document.getElementById("user-input").value;
+        if (!userInput.trim()) return;
+
+        // Display user message
+        let messages = document.getElementById("chat-messages");
+        messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+
+        // Send user message to backend
+        fetch("chat.php", {
+        method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: userInput })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.reply) {
+        console.log("ChatGPT says:", data.reply);
+        document.querySelector("#chat-messages").innerHTML += `<p>\n<strong>AI Teacher: </strong>${data.reply}</p>`;
+    } else {
+        console.error("Error:", data.error || "Unknown error occurred.");
+    }
+})
+.catch(error => console.error("Fetch error:", error));
+    }
+</script>
 </body>
 </html>
