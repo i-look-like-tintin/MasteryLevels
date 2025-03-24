@@ -1,5 +1,5 @@
 # IT-Project-1
-Current Version 0.3.2
+Current Version 0.3.3
 
 (Please update version number 
 after Pull request approved)
