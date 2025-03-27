@@ -268,6 +268,7 @@ $conn->close();
                             <th>Score</th>
                             <th>Total Questions</th>
                             <th>Percentage</th>
+                            <th>Review</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -277,6 +278,10 @@ $conn->close();
                                 <td><?php echo htmlspecialchars($result['score']); ?></td>
                                 <td><?php echo htmlspecialchars($result['total_questions']); ?></td>
                                 <td><?php echo number_format(($result['score'] / $result['total_questions']) * 100, 2) . "%"; ?></td>
+                                <td><form action ="review_exam.php" method="get">
+                                    <input type="hidden" name="subject" value="<?php echo htmlspecialchars($result['subject']); ?>">
+                                    <button type="submit">Review</button>
+                                </form></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
