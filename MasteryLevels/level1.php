@@ -34,7 +34,7 @@ if ($conn->connect_error) {
 
 // Select the exam database
 $conn->select_db($database);
-
+//TODO: This shouldnt be necessary
 // Create the quizzes table if it doesn't exist
 $createQuizzesTable = "
     CREATE TABLE IF NOT EXISTS quizzes (
@@ -51,6 +51,7 @@ $createQuizzesTable = "
 ";
 $conn->query($createQuizzesTable);
 
+//TODO: This shouldnt be here WTF
 // Clear all previous entries in the quizzes table
 $truncateQuizzesTable = "TRUNCATE TABLE quizzes";
 $conn->query($truncateQuizzesTable);
@@ -59,6 +60,9 @@ $conn->query($truncateQuizzesTable);
 // Insert the questions into the quizzes table
 $insertQuestions = "
     INSERT INTO quizzes (subject, level, question, option_a, option_b, option_c, option_d, correct_option) VALUES
+
+    -- Test Set questions
+    ('Test', 'Level 1', 'Define a python method to calculate the area of a circle, taking its radius as input', 'null', 'null', 'null', 'null', 'd'),
 
     -- Core Maths questions
     ('Core Maths', 'Level 1', 'What is the value of the derivative of f(x)=x^2+3x+5 at x = 2?', '7', '8', '11', '13', 'c'),
@@ -280,10 +284,8 @@ $insertQuestions = "
     ;";
 
 // Execute the INSERT query
-if ($conn->query($insertQuestions) === TRUE) {
-} else {
-    echo "Error inserting questions: " . $conn->error;
-}
+$conn->query($insertQuestions);
+
 
 
 // Initialize selected level
@@ -465,9 +467,14 @@ if (!$courses_result) {
                 // Prepare URL parameters by encoding them to handle spaces and special characters
                 $subject = urlencode($course['subject']);
                 $level = urlencode($selected_level);
-
-                // Display the exam button
-                echo "<a href='exam_page.php?subject={$subject}&level={$level}' class='btn'>" . htmlspecialchars($course['subject']) . " - " . htmlspecialchars($selected_level) . "</a>";
+                // Display the exam button - changes depending on whether multi choice or programming type
+                //TODO: Should be seperate type in table, rather than simply subject name
+                if ($subject === 'Test'){
+                    echo "<a href='exam_page_variation.php?subject={$subject}&level={$level}' class='btn'>" . htmlspecialchars($course['subject']) . " - " . htmlspecialchars($selected_level) . "</a>";
+                }
+                else echo "<a href='exam_page.php?subject={$subject}&level={$level}' class='btn'>" . htmlspecialchars($course['subject']) . " - " . htmlspecialchars($selected_level) . "</a>";
+                
+                
             }
         } else {
             echo "<p>No exams available for this level.</p>";
