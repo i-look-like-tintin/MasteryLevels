@@ -91,20 +91,27 @@ $conn->select_db($database);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
+    if (empty($email) || empty($password)){
+        $error = "All fields are required.";
+    }
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $error = "Invalid email format.";
+    }
+    else{
+        // Hash the password before storing it in the database
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Hash the password before storing it in the database
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        // Prepare and execute the insert statement
+        $insertUser = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'student')");
+        $insertUser->bind_param('ss', $email, $hashedPassword);
 
-    // Prepare and execute the insert statement
-    $insertUser = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'student')");
-    $insertUser->bind_param('ss', $email, $hashedPassword);
-
-    if ($insertUser->execute()) {
-        // Redirect to login page after successful registration
-        header("Location: login.php");
-        exit();
-    } else {
-        echo "Error: " . $insertUser->error;
+        if ($insertUser->execute()) {
+            // Redirect to login page after successful registration
+            header("Location: login.php");
+            exit();
+        } else {
+            echo "Error: " . $insertUser->error;
+        }
     }
 }
 
@@ -122,6 +129,9 @@ $conn->close();
 <body>
 <div class="login-container">
     <h1>Register</h1>
+    <?php if (isset($error)): ?>
+        <div class="message error"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
     <form action="register.php" method="post">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
