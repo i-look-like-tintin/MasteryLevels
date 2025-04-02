@@ -61,9 +61,35 @@ $conn->select_db($dbname);
         die("Error creating quizzes table: " . htmlspecialchars($conn->error));
     }
     
+    $createProgressTableQuery = "
+    CREATE TABLE IF NOT EXISTS student_progress (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id INT NOT NULL,
+        subject VARCHAR(255) NOT NULL,
+        question_id INT NOT NULL,
+        selected_option CHAR(1),
+        completed BOOLEAN DEFAULT 0,
+        UNIQUE KEY unique_progress (student_id, subject, question_id)
+    )
+    ";
+    if ($conn->query($createProgressTableQuery) === FALSE) {
+    die("Error creating student_progress table: " . htmlspecialchars($conn->error));
+    }
     
-
-
+    $createResultsTableQuery = "
+    CREATE TABLE IF NOT EXISTS results (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id INT NOT NULL,
+        subject VARCHAR(255) NOT NULL,
+        score INT NOT NULL,
+        total_questions INT NOT NULL,
+        exam_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_result (student_id, subject)
+    )
+    ";
+    if ($conn->query($createResultsTableQuery) === FALSE) {
+    die("Error creating results table: " . htmlspecialchars($conn->error));
+    }
 // Handle login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
