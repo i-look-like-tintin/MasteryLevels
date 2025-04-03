@@ -221,6 +221,7 @@ $conn->close();
         <nav class="dashboard-nav">
             <ul>
                 <li><a href="dashboard.php">Dashboard</a></li>
+                <li><a href="python_splash.php">Learn Python</a></li>
                 <li><a href="exams.php">Exams</a></li>
                 <li><a href="progress.php">Progress</a></li>
             </ul>

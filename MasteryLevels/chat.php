@@ -42,7 +42,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 $request_data = json_encode([
     "model" => "gpt-3.5-turbo",
     "messages" => [
-        ["role" => "system", "content" => "You are a helpful assistant."],
+        ["role" => "system", "content" => "You are a teaching assistant for a University 1st Year Python Programming course. You should help to guide students to find the answer to their questions, instead of telling them outright."],
         ["role" => "user", "content" => $user_message]
     ]
 ]);

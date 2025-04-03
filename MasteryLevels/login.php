@@ -90,6 +90,12 @@ $conn->select_db($dbname);
     if ($conn->query($createResultsTableQuery) === FALSE) {
     die("Error creating results table: " . htmlspecialchars($conn->error));
     }
+
+        // Modify the users table to add the 'role' column if it doesn't exist
+        $alterResultsTable = "
+        ALTER TABLE results ADD COLUMN IF NOT EXISTS python_progression INT(2) DEFAULT 1 NOT NULL;
+";
+    $conn->query($alterResultsTable);
 // Handle login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
