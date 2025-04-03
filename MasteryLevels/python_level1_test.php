@@ -146,7 +146,7 @@ $selected_level = 'Level 1';
 <body class="dashboard">
 
 <div class="test-container">
-    <form action="submit_test.php" method="post">
+    <form action="python_splash.php" method="post"> <!--TODO: Make this actually do something useful lol-->>
         <h2>Question 1</h2>
         <p class="question-text">
             What will the following Python code output?
