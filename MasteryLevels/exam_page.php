@@ -214,15 +214,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_exam'])) {
 
     // Insert into results table
     $insertResultQuery = "
-        INSERT INTO results (student_id, subject, score, total_questions)
-        VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE score = VALUES(score), total_questions = VALUES(total_questions), exam_date = CURRENT_TIMESTAMP
+        INSERT INTO results (student_id)
+        VALUES (?)
     ";
     $stmt_insert = $conn->prepare($insertResultQuery);
     if ($stmt_insert === false) {
         die("Prepare failed: " . htmlspecialchars($conn->error));
     }
-    $stmt_insert->bind_param("isii", $currentUserId, $subject, $score, $total_questions);
+    $stmt_insert->bind_param("isii", $currentUserId);
     if (!$stmt_insert->execute()) {
         die("Error inserting results: " . htmlspecialchars($stmt_insert->error));
     }
