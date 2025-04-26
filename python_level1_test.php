@@ -1,6 +1,6 @@
 <?php
-
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 
@@ -34,34 +34,30 @@ if ($conn->connect_error) {
 }
 $conn->select_db($database);
 
-$stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-$stmt->bind_param("s", $user);
-$stmt->execute();
 
-// Get result
-$result = $stmt->get_result();
+// --- RANDOM MULTIPLE CHOICE SECTION ---
 
-if ($row = $result->fetch_assoc()) {
-    $user_id = $row['id'];
-    //echo "User ID: " . $user_id;
-} else {
-    echo "User not found.";
+// Fetch 3 random Level 1 questions
+$questionQuery = "
+    SELECT q.questionID, q.question 
+    FROM Questions q
+    INNER JOIN Levels l ON q.levelID = l.levelID
+    WHERE l.levelID <= 4
+    ORDER BY RAND()
+    LIMIT 3
+";
+
+$questionResult = $conn->query($questionQuery);
+
+if (!$questionResult) {
+    die("Error fetching questions: " . htmlspecialchars($conn->error));
 }
 
-$stmt = $conn->prepare("DELETE FROM python_learning WHERE student_id = ?");
-if ($stmt === false) {
-    die("Prepare failed: " . htmlspecialchars($conn->error));
-}
-$stmt->bind_param("s", $user_id);
-$stmt->execute();
+$questions = [];
 
-$stmt = $conn->prepare("INSERT INTO python_learning (student_id, progress_level, q1, q2) VALUES (?, 1, 'b', 'c');"); //This is the fucky shit i was trynna do with the SQL, but it doesnt really make sense and probs needs another table
-if ($stmt === false) {                                                                                                      //Ive created the table itself in the login.php file
-    die("Prepare failed: " . htmlspecialchars($conn->error));
+while ($row = $questionResult->fetch_assoc()) {
+    $questions[] = $row;
 }
-
-$stmt->bind_param("s", $user_id);
-$stmt->execute();
 ?>
 
 
@@ -69,178 +65,170 @@ $stmt->execute();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Python Test - Level 1</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <title>Python Level 1 Test</title>
+    <link rel="stylesheet" href="your_existing_styles.css"> <!-- if you want -->
     <style>
-        .test-container {
-            width: 90%;
-            max-width: 900px;
-            margin: 100px auto 40px auto;
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        /* Extra Clean Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
         }
-
-        .question-text {
-            font-size: 1.2rem;
+        .main-content {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
             color: #333;
-            margin-bottom: 1rem;
         }
-
-        .multiple-choice {
-            margin-bottom: 1.5rem;
+        .exam-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-
-        .multiple-choice label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .code-input {
-            margin-top: 1.5rem;
-        }
-
-        .code-input textarea {
-            width: 100%;
-            height: 200px;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
+        .question-section {
+            background: #f1f5f9;
+            padding: 20px;
             border-radius: 8px;
+        }
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        .answer-option {
+            margin-bottom: 10px;
+        }
+        .answer-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .coding-question-section {
+            background: #eef2f7;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .instructions {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .code-textarea {
+            width: 100%;
+            height: 250px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1em;
+            padding: 10px;
             border: 1px solid #ccc;
+            border-radius: 6px;
             resize: vertical;
         }
-
-        .submit-btn {
-            margin-top: 2rem;
-            text-align: right;
+        .submit-section {
+            text-align: center;
+            margin-top: 20px;
         }
-        .lesson-container {
-            width: 90%;
-            max-width: 900px;
-            margin: 100px auto 40px auto;
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .submit-button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-
-        .lesson-header {
-            margin-bottom: 1.5rem;
+        .quit-button {
+            background:rgb(172, 34, 29);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-
-        .lesson-header h2 {
-            font-size: 2rem;
-            color: #333;
+        .submit-button:hover {
+            background: #45a049;
         }
-
-        .lesson-content p {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            color: #444;
-        }
-
-        .code-snippet {
-            background: #f4f4f4;
-            border-left: 4px solid #007BFF;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-        }
-
-        .lesson-actions {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .lesson-actions a {
-            text-decoration: none;
+        .question-divider {
+            border: none;
+            height: 1px;
+            background: #ddd;
+            margin: 30px 0;
         }
     </style>
 </head>
-<body class="dashboard">
+<body>
 
-<div class="test-container">
-    <form id = "quizForm">
-        <h2>Question 1</h2>
-        <p class="question-text">
-            What will the following Python code output?
-        </p>
-        <div class="code-snippet">
-<pre>
-x = 10
-y = 5
-print(x / y)
-</pre>
-        </div>
+<div class="main-content">
+    <h1 class="page-title">Python Level 1 Test</h1>
 
-        <div class="multiple-choice" name = multiple-choice-1>
-            <label><input type="radio" name="q1" value="a"> 2.0</label>
-            <label><input type="radio" name="q1" value="b"> 2</label>
-            <label><input type="radio" name="q1" value="c"> 0.5</label>
-            <label><input type="radio" name="q1" value="d"> Error</label>
-        </div>
-        <h2>Question 2</h2>
-        <p class="question-text">
-            What is the correct way of assigning a variable to hold the String "Ship"
-        </p>
-
-        <div class="multiple-choice" name = multiple-choice-2>
-            <label><input type="radio" name="q2" value="a"> "Ship" = variable</label>
-            <label><input type="radio" name="q2" value="b"> variable = 'Ship'</label>
-            <label><input type="radio" name="q2" value="c"> variable = "Ship"</label>
-            <label><input type="radio" name="q2" value="d"> 'Ship' = variable</label>
-        </div>
-        <button type="submit">Submit Multiple Choice</button>
-        <div id="feedback"></div>
-
-    </form>
-    <form id = "python_code">
-        
-    <div class="code-input">
-            <label for="user_code"><strong>Finally, write a line of Python code to <i>print</i> the mathematical value of 3 to the power of 2.</strong></label>
-            <textarea name="user_code" id="user_code" placeholder="Enter your Python code here..."></textarea>
-        </div>
-
-        <div class="submit-btn">
-            <button type="submit" class="fin-btn">Submit Test</button>
-        </div>
-        
-    </form>
-
-
-    <!--TODO: ANSWER CHECKING || THIS IS A WIP-->
-    <script>
-          document.getElementById("quizForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-        const questionNames = ["q1", "q2"]; // Add all your question input names here
-        let allAnswered = true;
-        let feedback = "";
-
-        questionNames.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="${q}"]:checked`);
-        if (!selected) {
-            allAnswered = false;
-            feedback += `<p>⚠️ Question ${i + 1} is unanswered.</p>`;
-        } else {
-            feedback += `<p>✅ Question ${i + 1} selected: ${selected.value}</p>`;
-        }
-  });
-
-  document.getElementById("feedback").innerHTML = feedback;
-
-  if (allAnswered) {
-    if
-  }
-});
-        </script>
+    <form action="submit_exam.php" method="post" class="exam-form">
+    <input type="hidden" name="subject" value="Python Level 1">
+    <div style="text-align: right; margin-bottom: 20px;">
+    <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
 </div>
+        <!-- Dynamically Generated Multiple Choice Questions -->
+        <?php
+        foreach ($questions as $index => $question) {
+            echo "<div class='question-section'>";
+            echo "<h2 class='question-text'>Question " . ($index + 1) . ": " . htmlspecialchars($question['question']) . "</h2>";
+
+            // Fetch corresponding answers
+            $answerQuery = "
+                SELECT answerID, answer, answer_character
+                FROM Answers
+                WHERE questionID = ?
+                ORDER BY answer_character ASC
+            ";
+
+            $stmt = $conn->prepare($answerQuery);
+            if (!$stmt) {
+                die("Error preparing answer query: " . htmlspecialchars($conn->error));
+            }
+
+            $stmt->bind_param("i", $question['questionID']);
+            $stmt->execute();
+            $answerResult = $stmt->get_result();
+
+            if ($answerResult->num_rows == 0) {
+                echo "<p class='no-answers-warning'>No answers available for this question.</p>";
+            } else {
+                while ($answer = $answerResult->fetch_assoc()) {
+                    echo "<div class='answer-option'>";
+                    echo "<label>";
+                    echo "<input type='radio' name='question_" . $question['questionID'] . "' value='" . htmlspecialchars($answer['answer_character']) . "' required> ";
+                    echo "<span class='answer-text'>" . htmlspecialchars($answer['answer_character']) . ". " . htmlspecialchars($answer['answer']) . "</span>";
+                    echo "</label>";
+                    echo "</div>";
+                }
+            }
+            echo "</div><hr class='question-divider'>";
+        }
+        ?>
+
+        <!-- Coding Question Section -->
+        <div class="coding-question-section">
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
+
+            <h2 class="question-text">Python Coding Question:</h2>
+            <p class="instructions">Write Python code to instantiate a variable named 'myVariable' with the value of 3. The program should then square this variable, and print the result.</p>
+            <textarea name="code_answer" class="code-textarea" placeholder="Use the IDE above to test and develop your code, then copy and paste it here to submit your answer..." required></textarea>
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-button">Submit Test</button>
+        </div>
+
+    </form>
+</div>
+
 </body>
 </html>
