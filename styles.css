@@ -192,13 +192,23 @@ header.dashboard-header .user-info {
 }
 
 /* Dashboard content */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px; /* or whatever it really is */
+    z-index: 100;
+    background-color: white; /* or your brand color */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* optional shadow */
+}
 .dashboard-content {
-    padding: 100px 50px;
+    padding: 0 50px 50px 50px;  /* remove top padding! */
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    box-sizing: border-box;
 }
-
 .dashboard-section {
     background-color: #fff;
     padding: 20px;

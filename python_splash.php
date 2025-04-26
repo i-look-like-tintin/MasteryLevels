@@ -36,168 +36,126 @@ if ($conn->connect_error) {
     die("Connection failed: " . htmlspecialchars($conn->connect_error));
 }
 
-// Fetch student's results and progress
-$results_query = "SELECT subject, score, total_questions FROM results WHERE student_id = ?";
-$stmt = $conn->prepare($results_query);
+// Fetch all levels
+$levelsQuery = "SELECT levelID, level FROM Levels ORDER BY levelID ASC";
+$levelsResult = $conn->query($levelsQuery);
+
+// Fetch user's completed subjects and grades
+$userResultsQuery = "
+    SELECT subject, score, total_questions
+    FROM results
+    WHERE student_id = ?
+";
+$stmt = $conn->prepare($userResultsQuery);
 $stmt->bind_param("i", $currentUserId);
 $stmt->execute();
-$results_result = $stmt->get_result();
+$userResults = $stmt->get_result();
 
-$course_progress = [];
-while ($row = $results_result->fetch_assoc()) {
-    $subject = $row['subject'];
-    $score = (int)$row['score'];
-    $total = (int)$row['total_questions'];
-    $percentage = ($total > 0) ? ($score / $total) * 100 : 0;
-    $is_completed = ($percentage >= 80);
+$userGrades = [];
 
-    $course_progress[$subject] = [
-        'score' => $score,
-        'total' => $total,
-        'percentage' => $percentage,
-        'completed' => $is_completed
+while ($row = $userResults->fetch_assoc()) {
+    $userGrades[$row['subject']] = [
+        'score' => $row['score'],
+        'total' => $row['total_questions'],
+        'percentage' => ($row['total_questions'] > 0) ? round(($row['score'] / $row['total_questions']) * 100, 1) : 0
     ];
 }
+
 $stmt->close();
-
-// Fetch all levels from the quizzes table
-$levels_query = "SELECT DISTINCT level FROM quizzes ORDER BY level ASC";
-$levels_result = $conn->query($levels_query);
-
-$levels = [];
-while ($level_row = $levels_result->fetch_assoc()) {
-    $levels[] = $level_row['level'];
-}
-$levels_result->free();
-
-// Calculate completion for each level
-$level_completion = [];
-foreach ($levels as $level) {
-    $courses_query = "SELECT subject FROM quizzes WHERE level = ?";
-    $stmt = $conn->prepare($courses_query);
-    $stmt->bind_param("s", $level);
-    $stmt->execute();
-    $courses_result = $stmt->get_result();
-
-    $total_courses = $courses_result->num_rows;
-    $completed_courses = 0;
-
-    while ($course_row = $courses_result->fetch_assoc()) {
-        $subject = $course_row['subject'];
-        if (isset($course_progress[$subject]) && $course_progress[$subject]['completed']) {
-            $completed_courses++;
-        }
-    }
-        // Calculate completion percentage
-        $percentage_complete = ($total_courses > 0) ? ($completed_courses / $total_courses) * 100 : 0;
-        $level_completion[$level] = $percentage_complete;
-}
-    $progress_query = "SELECT python_progression FROM results WHERE student_id = " . $currentUserId;
-    $stmt = $conn->query($progress_query);
-    if ($stmt->num_rows > 0) {
-        $row = $stmt->fetch_assoc();
-        $integerValue = (int) $row['python_progression'];
-
-        echo'<script>console.log(' . json_encode($integerValue) . ');</script>';
-        $highest_level_completed = $integerValue;
-        $_SESSION['highest_level_completed'] = $highest_level_completed;
-    }
-    else {
-        echo'<script>console.log("I dont know but we got here");</script>';
-    }
-
-
-    $stmt->close();
-
-$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasteryLevels - Python Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Python Levels</title>
+    <link rel="stylesheet" href="styles.css"> 
     <style>
-        .dashboard-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            background-color: #f0f4f8;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto 0 auto; /* <- 50px margin on top */
+    padding-top: 400px;
+}
 
-        .dashboard-section {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 40px;
-            width: 100%;
-            max-width: 800px;
-            text-align: center;
-        }
+.levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
 
-        .progress-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+.level-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    min-height: 160px;
+    transition: transform 0.2s ease;
+}
 
-        .progress-table th, .progress-table td {
-            padding: 12px;
-            border: 1px solid #ddd;
-        }
+.level-card:hover {
+    transform: scale(1.03);
+}
 
-        .progress-table th {
-            background-color: #4A90E2;
-            color: white;
-        }
+.level-card.level-locked {
+    background: #f0f0f0;
+}
 
-        .progress-table td {
-            background-color: #f9f9f9;
-        }
+.level-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
 
-        .completed {
-            background-color: #c8e6c9;
-            color: #2e7d32;
-        }
+.level-grade {
+    margin-bottom: 20px;
+    font-size: 1em;
+    color: #666;
+}
 
-        .pending {
-            background-color: #ffcdd2;
-            color: #c62828;
-        }
+.level-button {
+    padding: 10px 20px;
+    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
 
-        .level-buttons {
-            max-width: 700px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+.level-button:hover {
+    background: linear-gradient(90deg, rgb(96, 184, 252) 0%, rgb(236, 98, 252) 100%);
+}
 
-        /* Logout Button Style */
-        .logout-btn {
-            background-color: #FF5C5C;
-            border: none;
-            padding: 8px 16px;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.level-button.disabled {
+    background: #9e9e9e;
+    cursor: not-allowed;
+}
+.dashboard-content {
+    padding: clamp(30px, 5vw, 400px)
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.dashboard-section h1 {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.dashboard-section {
+    margin-top: 0%;
+}
 
-        .logout-btn:hover {
-            background-color: #FF1E1E;
-        }
-    </style>
+</style>
+
 </head>
-<body class="dashboard">
-    <!-- Header Section -->
-    <header class="dashboard-header">
+<body>
+<!-- Header Section -->
+<header class="dashboard-header">
         <div class="logo">
             <h1>MasteryLevels</h1>
         </div>
@@ -210,69 +168,83 @@ $conn->close();
             </ul>
         </nav>
         <div class="user-info">
+            <span>Hi, <?php echo htmlspecialchars($user); ?></span>
             <form method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                 <button type="submit" name="logout" class="logout-btn">Logout</button>
             </form>
         </div>
     </header>
+<div class="dashboard-content">
+    <div class = "dashboard-section">
+    <h1>Welcome to Python Mastery Levels</h1>
 
-    <!-- Main Content -->
-    <div class="dashboard-content">
-        <section class="dashboard-section">
-            <h2>Select a Python Mastery Level</h2>
-            <div class="level-buttons">
-                <a href="python_level1_welcome.php" class="level-btn">Python Level 1 Learning</a>
-                <a href="<?php echo $level1_completed ? 'python_level2.php' : '#'; ?>"
-                   class="level-btn <?php echo $level1_completed ? '' : 'disabled'; ?>"
-                   style="<?php echo !$level1_completed ? 'background-color: #ccc; color: #666; cursor: not-allowed; pointer-events: none;' : ''; ?>">
-                    Python Level 2 Learning</a>
-                <a href="<?php echo $level2_completed ? 'python_level3.php' : '#'; ?>"
-                   class="level-btn <?php echo $level2_completed ? '' : 'disabled'; ?>"
-                   style="<?php echo !$level2_completed ? 'background-color: #ccc; color: #666; cursor: not-allowed; pointer-events: none;' : ''; ?>">
-                    Python Level 3 Learning
-                </a>
-                <a href="<?php echo $level2_completed ? 'python_level4.php' : '#'; ?>"
-                   class="level-btn <?php echo $level2_completed ? '' : 'disabled'; ?>"
-                   style="<?php echo !$level2_completed ? 'background-color: #ccc; color: #666; cursor: not-allowed; pointer-events: none;' : ''; ?>">
-                    Python Level 4 Learning
-                </a>
-                <a href="<?php echo $level2_completed ? 'python_level5.php' : '#'; ?>"
-                   class="level-btn <?php echo $level2_completed ? '' : 'disabled'; ?>"
-                   style="<?php echo !$level2_completed ? 'background-color: #ccc; color: #666; cursor: not-allowed; pointer-events: none;' : ''; ?>">
-                    Python Level 5 Learning
-                </a>
-                <a href="<?php echo $level2_completed ? 'python_level6.php' : '#'; ?>"
-                   class="level-btn <?php echo $level2_completed ? '' : 'disabled'; ?>"
-                   style="<?php echo !$level2_completed ? 'background-color: #ccc; color: #666; cursor: not-allowed; pointer-events: none;' : ''; ?>">
-                    Python Level 6 Learning
-                </a>
-            </div>
-        </section>
+    <div class="levels-grid">
+<?php
+$levelsQuery = "SELECT levelID, level FROM Levels ORDER BY levelID ASC";
+$levelsResult = $conn->query($levelsQuery);
 
-        <section class="dashboard-section">
-            <h2>Levels Completion</h2>
-            <table class="progress-table">
-                <thead>
-                    <tr>
-                        <th>Level</th>
-                        <th>Percentage Complete</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($level_completion as $level => $percentage): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars("Level " . $level); ?></td>
-                            <td><?php echo number_format($percentage, 2) . "%"; ?></td>
-                            <td class="<?php echo ($percentage >= 100) ? 'completed' : 'pending'; ?>">
-                                <?php echo ($percentage >= 100) ? 'Completed' : 'Pending'; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </section>
+$levels = [];
+while ($row = $levelsResult->fetch_assoc()) {
+    $levels[] = $row;
+}
+
+$levelGroups = array_chunk($levels, 4); // 6 groups
+$canAccessNext = true;
+$groupNumber = 1;
+
+foreach ($levelGroups as $group) {
+    $displayTitle = "Level " . $groupNumber; // Visible button title
+
+    // NEW: Check result for 'Level 1', 'Level 2', etc
+    $groupResultKey = "Python Level " . $groupNumber;
+    $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] == 100;
+
+    $isLocked = !$canAccessNext;
+    echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
+    echo "<h2 class='level-title'>{$displayTitle}</h2>";
+    echo "<p class='level-grade'>" . ($groupComplete ? "Completed with 100%" : "Not Completed") . "</p>";
+
+    if (!$isLocked) {
+        echo "<a href='python_level".$groupNumber."_1.php' class='level-button'>Start Level</a>";
+    }
+    elseif ($groupComplete) {
+        echo "<a href='python_level".$groupNumber."_1.php' class='level-button'>Start Level</a>";
+    }
+    else {
+        echo "<button class='level-button disabled' disabled>Locked</button>";
+    }
+
+    echo "</div>";
+
+    // Only unlock next group if this group test was completed 100%
+    $canAccessNext = $groupComplete;
+    $groupNumber++;
+}
+?>
+
     </div>
+    </div>
+</div>
+<script>
+function applyDynamicHeaderPadding() {
+    const header = document.querySelector('.dashboard-header');
+    const content = document.querySelector('.dashboard-content');
+
+    if (!header || !content) return;
+
+    const headerHeight = header.offsetHeight;
+    const paddingTop = headerHeight + 20; // breathing room
+
+        // Set padding-top with !important to override any CSS
+        content.style.setProperty('padding-top', paddingTop + 'px', 'important');
+}
+
+// Run once DOM is fully ready
+window.addEventListener('DOMContentLoaded', applyDynamicHeaderPadding);
+
+// Rerun if window resizes or moves between screens
+window.addEventListener('resize', applyDynamicHeaderPadding);
+</script>
 </body>
 </html>
