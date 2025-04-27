@@ -32,7 +32,7 @@ $subject = $conn->real_escape_string($_GET['subject']);
 if($subject == "Python Level 1"){
 
 
-    $query = "SELECT q.questionID as question_id, q.question, a.answer_character, a.questionID, sp.selected_option, sp.question_id FROM Questions q, Answers a, student_progress sp WHERE question_id = a.questionID AND sp.question_id = question_id AND sp.student_id = ? AND sp.subject = ? AND sp.completed = 1";
+    $query = "SELECT q.questionID as question_id, q.question, a.answer_character, a.questionID, sp.selected_option, sp.question_id, a.answer_character AS correct_option, a.correct FROM Questions q, Answers a, student_progress sp WHERE question_id = a.questionID AND sp.question_id = question_id AND sp.student_id = ? AND sp.subject = ? AND sp.completed = 1 AND a.correct = 1;";
     $stmt = $conn->prepare($query);
     if ($stmt == false) {
         die("Prepare failed: " . htmlspecialchars($conn->error));
