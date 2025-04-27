@@ -28,21 +28,37 @@ if (!isset($_GET['subject']) || empty($_GET['subject'])) {
     echo "<p>No subject specified.</p>";
 }
 $subject = $conn->real_escape_string($_GET['subject']);
+//TODO: This shit aint working, but we closer lmao
+if($subject == "Python Level 1"){
 
-//fetch all questions and students answers
-$query = "SELECT q.id AS question_id, q.question, q.correct_option, sp.selected_option
-    FROM quizzes q
-    LEFT JOIN student_progress sp
-    ON q.id = sp.question_id AND sp.student_id = ? AND sp.subject = ?
-    WHERE q.subject = ?";
 
-$stmt = $conn->prepare($query);
-if ($stmt == false) {
-    die("Prepare failed: " . htmlspecialchars($conn->error));
+    $query = "SELECT q.questionID as question_id, q.question, a.answer_character, a.questionID, sp.selected_option, sp.question_id FROM Questions q, Answers a, student_progress sp WHERE question_id = a.questionID AND sp.question_id = question_id AND sp.student_id = ? AND sp.subject = ? AND sp.completed = 1";
+    $stmt = $conn->prepare($query);
+    if ($stmt == false) {
+        die("Prepare failed: " . htmlspecialchars($conn->error));
+    }
+    $stmt->bind_param("is", $currentUserId, $subject);
+
+    if (!$stmt->execute()) {
+        die("Execute failed: " . htmlspecialchars($stmt->error)); // Added error handling
+    }
 }
-$stmt->bind_param("iss", $currentUserId, $subject, $subject);
-if (!$stmt->execute()) {
-    die("Execute failed: " . htmlspecialchars($stmt->error)); // Added error handling
+else{
+//fetch all questions and students answers
+    $query = "SELECT q.id AS question_id, q.question, q.correct_option, sp.selected_option
+        FROM quizzes q
+        LEFT JOIN student_progress sp
+        ON q.id = sp.question_id AND sp.student_id = ? AND sp.subject = ?
+        WHERE q.subject = ?";
+
+    $stmt = $conn->prepare($query);
+    if ($stmt == false) {
+        die("Prepare failed: " . htmlspecialchars($conn->error));
+    }   
+    $stmt->bind_param("iss", $currentUserId, $subject, $subject);
+    if (!$stmt->execute()) {
+        die("Execute failed: " . htmlspecialchars($stmt->error)); // Added error handling
+    }
 }
 $result = $stmt->get_result();
 
