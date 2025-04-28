@@ -288,14 +288,73 @@ $conn->close();
     <title><?php echo htmlspecialchars($subject); ?> Exam - Question <?php echo $questionNumber; ?></title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Inline CSS for demonstration; consider moving to styles.css */
+        /* Default (light mode) styles */
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --button-bg: #007bff;
+            --button-hover-bg: #0056b3;
+            --button-disabled-bg: gray;
+            --exit-btn-bg: red;
+            --exit-btn-hover-bg: darkred;
+            --finish-btn-bg: #28a745;
+            --finish-btn-hover-bg: #218838;
+            --retake-btn-bg: #ffc107;
+            --retake-btn-hover-bg: #e0a800;
+        }
 
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .exam-container {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .btn {
+            background-color: #4a90e2;
+        }
+
+        body.dark-mode .btn:hover {
+            background-color: #357ab7;
+        }
+
+        body.dark-mode .exit-exam-btn {
+            background-color: #f44336;
+        }
+
+        body.dark-mode .exit-exam-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        body.dark-mode .finish-exam-btn {
+            background-color: #388e3c;
+        }
+
+        body.dark-mode .finish-exam-btn:hover {
+            background-color: #2c6f2d;
+        }
+
+        body.dark-mode .retake-exam-btn {
+            background-color: #fbc02d;
+        }
+
+        body.dark-mode .retake-exam-btn:hover {
+            background-color: #f57f17;
+        }
+
+        /* Light Mode */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
         }
+
         .exam-container {
             max-width: 800px;
             margin: 50px auto;
@@ -305,11 +364,12 @@ $conn->close();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
+
         .exit-exam-btn {
             position: absolute;
             top: 10px;
             left: 10px;
-            background-color: red;
+            background-color: var(--exit-btn-bg);
             color: white;
             padding: 10px;
             border: none;
@@ -318,35 +378,43 @@ $conn->close();
             text-decoration: none;
             border-radius: 4px;
         }
+
         .exit-exam-btn:hover {
-            background-color: darkred;
+            background-color: var(--exit-btn-hover-bg);
         }
+
         h1 {
             margin-top: 0;
-            color: #333;
+            color: var(--text-color);
         }
+
         .exam-question p {
             font-size: 18px;
         }
+
         .question-options {
             margin: 20px 0;
         }
+
         .question-options label {
             display: block;
             margin-bottom: 10px;
             font-size: 16px;
         }
+
         .question-options input[type="radio"] {
             margin-right: 10px;
         }
+
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
         }
+
         .btn {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: var(--button-bg);
             border: none;
             border-radius: 5px;
             color: white;
@@ -357,71 +425,78 @@ $conn->close();
             text-align: center;
             display: inline-block;
         }
+
         .btn:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-bg);
         }
+
         .btn:disabled {
-            background-color: gray;
+            background-color: var(--button-disabled-bg);
             cursor: not-allowed;
         }
+
         .finish-exam-btn {
-            background-color: #28a745;
+            background-color: var(--finish-btn-bg);
         }
+
         .finish-exam-btn:hover {
-            background-color: #218838;
+            background-color: var(--finish-btn-hover-bg);
         }
+
         .retake-exam-btn {
-            background-color: #ffc107;
+            background-color: var(--retake-btn-bg);
         }
+
         .retake-exam-btn:hover {
-            background-color: #e0a800;
+            background-color: var(--retake-btn-hover-bg);
         }
+
+        /* Toggle Button */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ccc;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 50%;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: #aaa;
+        }
+
     </style>
     <script>
-        // AJAX function to save the selected answer
-        function saveAnswer(option) {
-            // Disable further changes until the request completes
-            const radios = document.getElementsByName('selected_option');
-            radios.forEach(radio => radio.disabled = true);
+        // Check if user has a saved theme preference
+        window.onload = function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.body.classList.add(theme);
+            }
+        }
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'save_answer.php', true); // Ensure 'save_answer.php' handles CSRF tokens
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    // Re-enable radio buttons after the request completes
-                    radios.forEach(radio => radio.disabled = false);
+        // Function to toggle between light and dark mode
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            const newTheme = currentTheme === 'light-mode' ? 'dark-mode' : 'light-mode';
 
-                    if (xhr.status === 200) {
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.status === 'success') {
-                                console.log('Answer saved successfully.');
-                            } else {
-                                console.error('Error saving answer:', response.message);
-                                alert('Error saving your answer. Please try again.');
-                            }
-                        } catch (e) {
-                            console.error('Invalid JSON response');
-                            alert('An unexpected error occurred while saving your answer.');
-                        }
-                    } else {
-                        console.error('AJAX request failed with status:', xhr.status);
-                        alert('Failed to save your answer. Please check your connection and try again.');
-                    }
-                }
-            };
-            // Send selected option, subject, question_id, student_id, and CSRF token
-            xhr.send('save_answer=1&selected_option=' + encodeURIComponent(option) +
-                     '&subject=' + encodeURIComponent('<?php echo htmlspecialchars($subject); ?>') +
-                     '&question_id=' + encodeURIComponent('<?php echo $question['id']; ?>') +
-                     '&student_id=' + encodeURIComponent('<?php echo $currentUserId; ?>') +
-                     '&csrf_token=' + encodeURIComponent('<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>'));
+            // Toggle class on body to switch themes
+            document.body.classList.remove(currentTheme);
+            document.body.classList.add(newTheme);
+
+            // Save user preference in localStorage
+            localStorage.setItem('theme', newTheme);
         }
     </script>
 </head>
 <body>
 <div class="exam-container">
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle-btn" onclick="toggleTheme()">🌙/🌞</button>
 
     <!-- Exit Exam Button -->
     <a href="exams.php" class="exit-exam-btn">Exit Exam</a>
@@ -475,7 +550,6 @@ $conn->close();
                 <?php if ($questionNumber < $totalQuestions): ?>
                     <a href="exam_page.php?subject=<?php echo urlencode($subject); ?>&q=<?php echo $questionNumber + 1; ?>" class="btn">Next Question</a>
                 <?php else: ?>
-                    <!-- Always enable the Submit Exam button, regardless of answered questions -->
                     <button type="submit" name="submit_exam" class="btn finish-exam-btn">Submit Exam</button>
                 <?php endif; ?>
             </div>

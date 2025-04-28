@@ -116,13 +116,113 @@ $conn->close();
     <title>MasteryLevels - Exam Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Default (light mode) styles */
+        :root {
+            --bg-color: #f0f4f8;
+            --text-color: #333;
+            --button-bg: #007bff;
+            --button-hover-bg: #0056b3;
+            --button-disabled-bg: #ccc;
+            --header-bg: #ffffff;
+            --header-text-color: #333;
+            --table-bg: #fff;
+            --table-header-bg: #4A90E2;
+            --table-header-text-color: white;
+            --completed-bg: #c8e6c9;
+            --completed-text-color: #2e7d32;
+            --pending-bg: #ffcdd2;
+            --pending-text-color: #c62828;
+            --logout-bg: #FF5C5C;
+            --logout-hover-bg: #FF1E1E;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .dashboard-content {
+            background-color: #1f1f1f;
+        }
+
+        body.dark-mode .dashboard-header {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .progress-table th {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .progress-table td {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .completed {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        body.dark-mode .pending {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        body.dark-mode .logout-btn {
+            background-color: #d32f2f;
+        }
+
+        body.dark-mode .logout-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        body.dark-mode .level-btn {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .level-btn:hover {
+            background-color: #555;
+        }
+
+        body.dark-mode .disabled {
+            background-color: #555;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Light Mode */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--header-bg);
+            color: var(--header-text-color);
+        }
+
+        .dashboard-header a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px;
+        }
+
         .dashboard-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 40px;
-            background-color: #f0f4f8;
+            background-color: var(--bg-color);
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
@@ -133,6 +233,26 @@ $conn->close();
             width: 100%;
             max-width: 800px;
             text-align: center;
+        }
+
+        .level-btn {
+            background-color: var(--button-bg);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .level-btn:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        .disabled {
+            background-color: var(--button-disabled-bg);
+            color: #666;
+            cursor: not-allowed;
         }
 
         .progress-table {
@@ -147,34 +267,27 @@ $conn->close();
         }
 
         .progress-table th {
-            background-color: #4A90E2;
-            color: white;
+            background-color: var(--table-header-bg);
+            color: var(--table-header-text-color);
         }
 
         .progress-table td {
-            background-color: #f9f9f9;
+            background-color: var(--table-bg);
         }
 
         .completed {
-            background-color: #c8e6c9;
-            color: #2e7d32;
+            background-color: var(--completed-bg);
+            color: var(--completed-text-color);
         }
 
         .pending {
-            background-color: #ffcdd2;
-            color: #c62828;
-        }
-
-        .level-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            background-color: var(--pending-bg);
+            color: var(--pending-text-color);
         }
 
         /* Logout Button Style */
         .logout-btn {
-            background-color: #FF5C5C;
+            background-color: var(--logout-bg);
             border: none;
             padding: 8px 16px;
             color: #fff;
@@ -184,9 +297,49 @@ $conn->close();
         }
 
         .logout-btn:hover {
-            background-color: #FF1E1E;
+            background-color: var(--logout-hover-bg);
         }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ccc;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 50%;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: #aaa;
+        }
+
     </style>
+    <script>
+        // Check if user has a saved theme preference
+        window.onload = function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.body.classList.add(theme);
+            }
+        }
+
+        // Function to toggle between light and dark mode
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            const newTheme = currentTheme === 'light-mode' ? 'dark-mode' : 'light-mode';
+
+            // Toggle class on body to switch themes
+            document.body.classList.remove(currentTheme);
+            document.body.classList.add(newTheme);
+
+            // Save user preference in localStorage
+            localStorage.setItem('theme', newTheme);
+        }
+    </script>
 </head>
 <body class="dashboard">
     <!-- Header Section -->
@@ -211,6 +364,9 @@ $conn->close();
 
     <!-- Main Content -->
     <div class="dashboard-content">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn" onclick="toggleTheme()">🌙/🌞</button>
+
         <section class="dashboard-section">
             <h2>Select a Course Level</h2>
             <div class="level-buttons">

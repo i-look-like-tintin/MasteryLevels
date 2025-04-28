@@ -16,6 +16,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Create database if it doesn't exist
+$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
+$conn->query($sql);
+
+// Select the database
+$conn->select_db($dbname);
+
 //TODO: THIS IS ONLY HERE FOR TESTING. IT DELETES THE ENTIRE DATABASE IF SESSION COOKIE NOT SET. IT SHOULD BE REMOVED EVENTUALLY
 $sqlTemp = "DROP DATABASE exam_website";
 $conn->query($sqlTemp);

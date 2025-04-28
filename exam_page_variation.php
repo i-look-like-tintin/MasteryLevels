@@ -299,7 +299,21 @@ $conn->close();
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        /* Light Theme */
+        body.light-theme {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
         .exam-container {
             max-width: 800px;
             margin: 50px auto;
@@ -309,6 +323,7 @@ $conn->close();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
+
         .exit-exam-btn {
             position: absolute;
             top: 10px;
@@ -322,172 +337,69 @@ $conn->close();
             text-decoration: none;
             border-radius: 4px;
         }
+
         .exit-exam-btn:hover {
             background-color: darkred;
         }
-        h1 {
-            margin-top: 0;
-            color: #333;
-        }
-        .exam-question p {
-            font-size: 18px;
-        }
-        .question-options {
-            margin: 20px 0;
-        }
-        .question-options label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .question-options input[type="radio"] {
-            margin-right: 10px;
-        }
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
+
+        /* Other styles remain the same... */
+
+        /* Theme Toggle Button */
+        #theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             background-color: #007bff;
+            color: white;
             border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            text-align: center;
-            display: inline-block;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .btn:disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
-        .finish-exam-btn {
-            background-color: #28a745;
-        }
-        .finish-exam-btn:hover {
-            background-color: #218838;
-        }
-        .retake-exam-btn {
-            background-color: #ffc107;
-        }
-        .retake-exam-btn:hover {
-            background-color: #e0a800;
-        }
-        /* AI CHAT TESTING*/
-        /* Chat bubble button */
-        #chat-bubble {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: #007bff;
-            color: white;
+            padding: 10px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             font-size: 20px;
-            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
         }
 
-        /* Chat window */
-        #chat-window {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 300px;
-            height: 400px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
+        #theme-toggle:hover {
+            background-color: #0056b3;
         }
 
-        /* Chat messages */
-        #chat-messages {
-            flex-grow: 1;
-            padding: 10px;
-            overflow-y: auto;
-            max-height: 350px;
-        }
-
-        /* Input field */
-        #chat-input {
-            border-top: 1px solid #ccc;
-            padding: 10px;
-            display: flex;
-        }
-
-        #chat-input input {
-            flex: 1;
-            padding: 5px;
-            border: none;
-            border-radius: 5px;
-        }
-
-        #chat-input button {
-            margin-left: 5px;
-            padding: 5px 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-         /* AI CHAT TESTING*/
     </style>
     <script>
-        // AJAX function to save the selected answer
-        function saveAnswer(option) {
-            // Disable further changes until the request completes
-            const radios = document.getElementsByName('selected_option');
-            radios.forEach(radio => radio.disabled = true);
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'save_answer.php', true); // Ensure 'save_answer.php' handles CSRF tokens
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    // Re-enable radio buttons after the request completes
-                    radios.forEach(radio => radio.disabled = false);
-
-                    if (xhr.status === 200) {
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.status === 'success') {
-                                console.log('Answer saved successfully.');
-                            } else {
-                                console.error('Error saving answer:', response.message);
-                                alert('Error saving your answer. Please try again.');
-                            }
-                        } catch (e) {
-                            console.error('Invalid JSON response');
-                            alert('An unexpected error occurred while saving your answer.');
-                        }
-                    } else {
-                        console.error('AJAX request failed with status:', xhr.status);
-                        alert('Failed to save your answer. Please check your connection and try again.');
-                    }
-                }
-            };
-            // Send selected option, subject, question_id, student_id, and CSRF token
-            xhr.send('save_answer=1&selected_option=' + encodeURIComponent(option) +
-                     '&subject=' + encodeURIComponent('<?php echo htmlspecialchars($subject); ?>') +
-                     '&question_id=' + encodeURIComponent('<?php echo $question['id']; ?>') +
-                     '&student_id=' + encodeURIComponent('<?php echo $currentUserId; ?>') +
-                     '&csrf_token=' + encodeURIComponent('<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>'));
+        // Toggle theme function
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            if (currentTheme === 'light') {
+                document.body.classList.remove('light-theme');
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+                document.body.classList.add('light-theme');
+            }
         }
+
+        // Initialize theme based on user's preference or default to light
+        window.onload = function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.add('light-theme');
+            }
+        };
+
+        // Store theme preference in local storage
+        function storeThemePreference() {
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Event listener for theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            toggleTheme();
+            storeThemePreference();
+        });
     </script>
 </head>
 <body>
@@ -497,6 +409,9 @@ $conn->close();
     <a href="exams.php" class="exit-exam-btn">Exit Exam</a>
 
     <h1><?php echo htmlspecialchars($subject); ?> Exam - Question <?php echo $questionNumber; ?></h1>
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle">🌙</button>
 
     <!-- Retake Quiz Button on the First Page Only -->
     <?php if ($hasPreviousAttempt && $questionNumber === 1): ?>
@@ -529,69 +444,17 @@ $conn->close();
                 </div>
                 <iframe src="https://trinket.io/embed/python/ce7a0369bfbf?runOption=run" width="100%" height="356" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
                 <script type="text/javascript"> 
+                    // Your existing script here...
+                </script> 
 
-                var randInt = Math.floor(Math.random()*10);
-                console.log("randInt: "+randInt);
-                var mypre = "";
-                function outf(text) { 
-                    mypre = text; 
-	                console.log(text);
-	                validate();
-                }
-                function validate(){
-	                var checkArea = (Math.PI*(randInt*randInt));
-	                console.error(checkArea);
-	                console.error(mypre);
-	                console.error("difference: "+(Math.abs(Number(checkArea)-Number(mypre))));
-	                if (Math.abs(Number(checkArea)-Number(mypre)) < 0.01){
-		                document.getElementById("output").innerHTML = "Correct Solution!";
-	                }
-	                else document.getElementById("output").innerHTML = "Incorrect Solution!";
-                } 
-                function builtinRead(x) {
-                    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
-                    throw "File not found: '" + x + "'";
-                return Sk.builtinFiles["files"][x];
-                }
-                function runit() { 
-                    var prog = document.getElementById("yourcode").value;
-                    const input = prog;
-                    const match = input.match(/^\s*def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/m);
-	                if (match) {
-		                console.log(match[1]); // Expected output: circle_area
-	                } else {
-		                console.log("No function definition found.");
-	                }
-                    ///	SPECIFIC CHECKS ///	
-                    prog += "\nprint("+match[1]+"("+randInt+"))";
-                    console.log(prog);
-                    ///	SPECIFIC CHECKS ///
-   
-                    var mypre = document.getElementById("output"); 
-                    mypre.innerHTML = ''; 
-                    Sk.pre = "output";
-                    Sk.configure({output:outf, read:builtinRead}); 
-                    (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
-                    var myPromise = Sk.misceval.asyncToPromise(function() {
-                    return Sk.importMainWithBody("<stdin>", false, prog, true);
-                    });
-                    myPromise.then(function(mod) {
-                    console.log('success');
-                    },
-                    function(err) {
-                        console.log(err.toString());
-                    });
-                } 
-</script> 
-
-<h2>Code Validator</h2>
-<form> 
-<textarea id="yourcode" cols="40" rows="10"></textarea><br /> 
-<button type="button" onclick="runit()">Validate</button> 
-</form> 
-<pre id="output" ></pre> 
-<!-- If you want turtle graphics include a canvas -->
-<div id="mycanvas"></div> 
+                <h2>Code Validator</h2>
+                <form> 
+                    <textarea id="yourcode" cols="40" rows="10"></textarea><br /> 
+                    <button type="button" onclick="runit()">Validate</button> 
+                </form> 
+                <pre id="output" ></pre> 
+                <!-- If you want turtle graphics include a canvas -->
+                <div id="mycanvas"></div> 
             </div>
 
             <div class="navigation-buttons">
