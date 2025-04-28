@@ -29,7 +29,7 @@ if (!isset($_GET['subject']) || empty($_GET['subject'])) {
 }
 $subject = $conn->real_escape_string($_GET['subject']);
 //TODO: This shit aint working, but we closer lmao
-if($subject == "Python Level 1"){
+if(str_contains($subject, "Python Level")){
 
 
     $query = "SELECT 
