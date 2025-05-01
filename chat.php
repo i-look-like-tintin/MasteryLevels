@@ -42,7 +42,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 $request_data = json_encode([
     "model" => "gpt-3.5-turbo",
     "messages" => [
-        ["role" => "system", "content" => "You are a teaching assistant for a University 1st Year Python Programming course. You should help to guide students to find the answer to their questions, instead of telling them outright."],
+        ["role" => "system", "content" => "You are a teaching assistant for a University 1st Year Python Programming course. You should help to guide students to find the answer to their questions, instead of telling them outright. Additionally, if you receive two backticks `` as user input, treat them as a double quote"],
         ["role" => "user", "content" => $user_message]
     ]
 ]);

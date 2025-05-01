@@ -28,27 +28,29 @@ if (!isset($_GET['subject']) || empty($_GET['subject'])) {
     echo "<p>No subject specified.</p>";
 }
 $subject = $conn->real_escape_string($_GET['subject']);
-//TODO: This shit aint working, but we closer lmao
 if(str_contains($subject, "Python Level")){
 
-
+    //TODO: This might not be super duper stable
     $query = "SELECT 
     sr.student_id,
     sr.question_id,
     q.question,
     sr.selected_option,
-    a.answer_character AS correct_option,
-    a.answer AS correct_answer
-    FROM 
-    student_progress sr
-    JOIN 
-    Questions q ON sr.question_id = q.questionID
-    JOIN 
-    Answers a ON q.questionID = a.questionID
-    WHERE 
-    sr.student_id = ? -- Replace <student_id_list> with the list of student IDs
-    AND sr.subject = ? -- Replace <question_id_list> with the list of question IDs
-    AND a.correct = TRUE;";
+    ca.answer_character AS correct_option,
+    ca.answer AS correct_answer,
+    (
+        SELECT wa.answer
+        FROM Answers wa
+        WHERE wa.questionID = q.questionID AND wa.correct = FALSE
+        ORDER BY RAND()
+        LIMIT 1
+    ) AS wrong_answer
+    FROM student_progress sr
+    JOIN Questions q ON sr.question_id = q.questionID
+    JOIN Answers ca ON q.questionID = ca.questionID AND ca.correct = TRUE
+    WHERE sr.student_id = ?
+    AND sr.subject = ?;
+    ";
     $stmt = $conn->prepare($query);
     if ($stmt == false) {
         die("Prepare failed: " . htmlspecialchars($conn->error));
@@ -136,12 +138,14 @@ ob_end_flush();
                     <th>Your Answer</th>
                     <th>Correct Answer</th>
                     <th>Result</th>
+                    <th>Get Assistance</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($questions as $question): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($question['question']); ?></td>
+                        <td><?php
+                                echo htmlspecialchars($question['question']); ?></td>
                         <td><?php echo htmlspecialchars(strtoupper($question['selected_option'] ?? 'Not Answered')); ?></td>
                         <td><?php echo htmlspecialchars(strtoupper($question['correct_option'])); ?></td>
                         <td>
@@ -154,11 +158,86 @@ ob_end_flush();
                                 <span style="color:red;">Incorrect</span>
                             <?php endif; ?>
                         </td>
+                        <td>
+                            <?php 
+                            if (strcasecmp($selectedOption, $correctOption) === 0): ?> <!-- Case-insensitive comparison -->
+                                
+                            <?php else: ?>
+                                <button onclick="chatHelp('<?php echo htmlspecialchars($question['question'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($question['wrong_answer'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($question['correct_answer'], ENT_QUOTES); ?>')">Get AI Help💬</button>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
         <a href="dashboard.php" class="btn">Back to Dashboard</a>
     </div>
+    <!-- Chat Bubble -->
+<div id="chat-bubble">💬</div>
+
+<!-- Chat Window -->
+<div id="chat-window">
+    <div id="chat-messages"></div>
+    <div id="chat-input">
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById("chat-bubble").addEventListener("click", function() {
+        let chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display = (chatWindow.style.display === "none" || chatWindow.style.display === "") ? "flex" : "none";
+    });
+    function chatHelp(question, wrongAnswer, correctAnswer) {
+        let chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display = "flex";
+        let userInput = "I need help with a question. The question asked me: " + question + " I selected '" + wrongAnswer + "' as my answer, but the correct answer was instead '" + correctAnswer + "'. Can you please briefly explain the correct answer?";
+        if (!userInput.trim()) return;
+        let messages = document.getElementById("chat-messages");
+        //messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+        // Send user message to backend
+        fetch("chat.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userInput })
+        })
+        .then(response => response.json())
+    .then(data => {
+    if (data.reply) {
+        console.log("AI Teacher:", data.reply);
+        document.querySelector("#chat-messages").innerHTML += `<p>\n<strong>AI Teacher: </strong>${data.reply}</p>`;
+    } else {
+        console.error("Error:", data.error || "Unknown error occurred.");
+    }
+        })
+    .catch(error => console.error("Fetch error:", error));
+    }
+    function sendMessage() {
+        let userInput = document.getElementById("user-input").value;
+        if (!userInput.trim()) return;
+
+        // Display user message
+        let messages = document.getElementById("chat-messages");
+        messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+
+        // Send user message to backend
+        fetch("chat.php", {
+        method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: userInput })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.reply) {
+        console.log("AI Teacher:", data.reply);
+        document.querySelector("#chat-messages").innerHTML += `<p>\n<strong>AI Teacher: </strong>${data.reply}</p>`;
+    } else {
+        console.error("Error:", data.error || "Unknown error occurred.");
+    }
+})
+.catch(error => console.error("Fetch error:", error));
+    }
+</script>
 </body>
 </html>
