@@ -31,11 +31,13 @@ $subject = $conn->real_escape_string($_GET['subject']);
 if(str_contains($subject, "Python Level")){
 
     //TODO: This might not be super duper stable
+    //But then again, perceived stability is a social construct
     $query = "SELECT 
     sr.student_id,
     sr.question_id,
     q.question,
     sr.selected_option,
+    sa.answer AS selected_answer,
     ca.answer_character AS correct_option,
     ca.answer AS correct_answer,
     (
@@ -44,12 +46,30 @@ if(str_contains($subject, "Python Level")){
         WHERE wa.questionID = q.questionID AND wa.correct = FALSE
         ORDER BY RAND()
         LIMIT 1
-    ) AS wrong_answer
+    ) AS wrong_answer,
+    cs_latest.code AS submitted_code,
+    cs_latest.submission_time
     FROM student_progress sr
     JOIN Questions q ON sr.question_id = q.questionID
     JOIN Answers ca ON q.questionID = ca.questionID AND ca.correct = TRUE
+    LEFT JOIN Answers sa 
+        ON sa.questionID = sr.question_id AND sa.answer_character = sr.selected_option
+    LEFT JOIN (
+    SELECT cs1.*
+    FROM code_submissions cs1
+    JOIN (
+        SELECT student_id, subject, MAX(submission_time) AS latest_time
+        FROM code_submissions
+        GROUP BY student_id, subject
+    ) cs2 ON cs1.student_id = cs2.student_id 
+         AND cs1.subject = cs2.subject 
+         AND cs1.submission_time = cs2.latest_time
+    ) AS cs_latest ON cs_latest.student_id = sr.student_id 
+               AND cs_latest.subject = sr.subject
     WHERE sr.student_id = ?
     AND sr.subject = ?;
+
+
     ";
     $stmt = $conn->prepare($query);
     if ($stmt == false) {
@@ -60,6 +80,8 @@ if(str_contains($subject, "Python Level")){
     if (!$stmt->execute()) {
         die("Execute failed: " . htmlspecialchars($stmt->error)); // Added error handling
     }
+
+
 }
 else{
 //fetch all questions and students answers
@@ -83,7 +105,7 @@ $result = $stmt->get_result();
 
 $questions = [];
 while ($row = $result->fetch_assoc()) {
-    $questions[] = $row; // Fixed typo: $question[] -> $questions[]
+    $questions[] = $row;
 }
 if (empty($questions)) {
     echo "<p>No questions found for the selected subject.</p>"; // Added fallback message
@@ -92,9 +114,7 @@ if (empty($questions)) {
 if ($result->num_rows === 0) {
     die("No data returned. Check if questions exist for subject: " . htmlspecialchars($subject));
 }
-// Debugging output
-// Uncomment the following line to inspect the fetched questions
-//var_dump($questions);
+
 
 $stmt->close();
 $conn->close();
@@ -125,6 +145,14 @@ ob_end_flush();
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+        .code-submission-box {
+            background-color:rgb(191, 203, 221);
+            border: 1px solid #ccc;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+         }
     </style>
 </head>
 <body>
@@ -146,8 +174,13 @@ ob_end_flush();
                     <tr>
                         <td><?php
                                 echo htmlspecialchars($question['question']); ?></td>
-                        <td><?php echo htmlspecialchars(strtoupper($question['selected_option'] ?? 'Not Answered')); ?></td>
-                        <td><?php echo htmlspecialchars(strtoupper($question['correct_option'])); ?></td>
+                        <td><?php echo htmlspecialchars(strtoupper($question['selected_option'] ?? 'Not Answered')); ?>
+                        <?php echo " (" . htmlspecialchars($question['selected_answer'], ENT_QUOTES) . ")"; ?>
+                <!-- TODO: Consider echoing answer here -->
+                        </td>
+                        <td><?php echo htmlspecialchars(strtoupper($question['correct_option'])); ?>
+                            <?php echo " (" . htmlspecialchars($question['correct_answer'], ENT_QUOTES) . ")"; ?>
+                        </td>
                         <td>
                             <?php 
                             $selectedOption = trim((string) $question['selected_option'] ?? '');
@@ -167,9 +200,18 @@ ob_end_flush();
                             <?php endif; ?>
                         </td>
                     </tr>
+
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <?php //TODO: Check if code was marked correct
+                        if (!empty($question['submitted_code']) && str_contains($subject, "Python Level")) {
+                            echo '<div class="code-submission-box">';
+                            echo '<h4>Submitted Code:</h4>';
+                            echo '<pre>' . htmlspecialchars($question['submitted_code']) . '</pre>';
+                            echo '</div>';
+                         }
+                    ?>
         <a href="dashboard.php" class="btn">Back to Dashboard</a>
     </div>
     <!-- Chat Bubble -->
