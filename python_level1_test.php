@@ -162,6 +162,7 @@ while ($row = $questionResult->fetch_assoc()) {
             background: #ddd;
             margin: 30px 0;
         }
+        
     </style>
 </head>
 <body>
@@ -220,7 +221,24 @@ while ($row = $questionResult->fetch_assoc()) {
 
             <h2 class="question-text">Python Coding Question:</h2>
             <p class="instructions">Write Python code to instantiate a variable named 'myVariable' with the value of 3. The program should then square this variable, and print the result.</p>
-            <textarea name="code_answer" class="code-textarea" placeholder="Use the IDE above to test and develop your code, then copy and paste it here to submit your answer..." required></textarea>
+            <textarea name="code_answer" class="code-textarea" id="codeEditor" 
+            placeholder="Use the IDE above to test and develop your code..." 
+            required spellcheck="false"></textarea>
+            <script>
+                document.getElementById('codeEditor').addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                e.preventDefault();
+        let start = this.selectionStart;
+        let end = this.selectionEnd;
+
+        // Set textarea value to: text before caret + 4 spaces + text after caret
+        this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+
+        // Move caret
+        this.selectionStart = this.selectionEnd = start + 4;
+    }
+});
+</script>
         </div>
 
         <div class="submit-section">
