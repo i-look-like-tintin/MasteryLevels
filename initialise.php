@@ -16,6 +16,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
+
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 $conn->query($sql);
@@ -28,15 +30,12 @@ $sqlTemp = "DROP DATABASE exam_website";
 $conn->query($sqlTemp);
 echo "<script>console.error('DATABASE DESTROYED');</script>";
 
-
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 $conn->query($sql);
 
 // Select the database
 $conn->select_db($dbname);
-
-//TODO: Table instantiation
     // Create users table if it doesn't exist
     $sql = "CREATE TABLE IF NOT EXISTS users (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

@@ -21,7 +21,7 @@ We can define strings as follows:
 
 Output:
 
-```
+```wibblywobbly
 This is a string
 Everything you write between quotes is a string
 ```
@@ -78,16 +78,15 @@ However, spaces do not matter between code elements.
 For Example both are equivalent:
 
 ```python
-1 print ("(___)__ *") 
-2 print( "*(___)__ " )
+1 print ("This is a string") 
+2 print( "This is a string" )
 ```
 
 Output:
-
-(___)__
-
-(___)__
-
+```timeywimey
+This is a string
+This is a string
+```
 Notice how there is whitespace before the String on line 2, this does not change what is printed inside the String.   
 
 </aside>
@@ -99,6 +98,10 @@ Notice how there is whitespace before the String on line 2, this does not change
 - `print()` is a built-in function to display a value to screen
 
 ---
+
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f?showInstructions=true" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ## Variables, assignment, and string concatenation
 
@@ -137,7 +140,7 @@ Let’s now run the second cell:
 
 Output:
 
-```
+```nonsensewonsense
 Fernando Pérez
 ```
 
@@ -156,7 +159,7 @@ Let’s run this code:
 
 Output:
 
-```
+```tungtungtungsahur
 What’s your name? Alice 
 What's your favourite food? Pasta 
 Hi! My name is Alice

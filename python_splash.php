@@ -200,16 +200,18 @@ foreach ($levelGroups as $group) {
     $groupResultKey = "Python Level " . $groupNumber;
     $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] == 100;
 
-    $isLocked = !$canAccessNext;
+    $isLocked = false;
+    //TODO: Reset this
+    //$isLocked = !$canAccessNext;
     echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
     echo "<h2 class='level-title'>{$displayTitle}</h2>";
     echo "<p class='level-grade'>" . ($groupComplete ? "Completed with 100%" : "Not Completed") . "</p>";
 
     if (!$isLocked) {
-        echo "<a href='python_level".$groupNumber."_1.php' class='level-button'>Start Level</a>";
+        echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
     }
     elseif ($groupComplete) {
-        echo "<a href='python_level".$groupNumber."_1.php' class='level-button'>Start Level</a>";
+        echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
     }
     else {
         echo "<button class='level-button disabled' disabled>Locked</button>";
