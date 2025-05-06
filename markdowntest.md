@@ -220,7 +220,7 @@ The elements are separated by commas and they are in between square brackets. A 
 
 Output:
 
-```
+```blahblah
 Hi! What book would you like to buy? Learn Python
 Learn Python
 ```
@@ -250,7 +250,7 @@ As you can deduce from the example above, in an if/else construct, code is execu
 > 
 > - if the condition is met, the code under the if condition is executed;
 > - if the condition is not met, the code under else is executed.
-
+<!-- SUBSECTION -->
 Let’s now focus on the syntax. An if/else construct is composed of four parts, explained below:  
 
 1. **if condition** (line 5) contains a condition that determines code execution. It is made up of three  components: 
@@ -391,7 +391,7 @@ Note that in coding, we use the two synonyms index and position interchangeably.
 ![Figure 2.1. Representation of the list todays_menu: each square is a list element, and the number above is the corresponding index.](PythonPathways%201e9c242da244801f9e94cc2f55e9a45b/image.png)
 
 Figure 2.1. Representation of the list todays_menu: each square is a list element, and the number above is the corresponding index.
-
+<!-- SUBSECTION -->
 Finally, note that an element position is a number. In Python, zero, positive, and negative whole numbers are called integers, abbreviated as `int`. In our example, the variable `side_dish_index` contains  the number `1`, and it is of type integer.
 
 ```python
@@ -618,6 +618,11 @@ You have now mastered the three-s rule and learned how to simplify it. How else 
 Figure 2.3. In a list, indices can be positive (from left to right) or negative (from right to left).
 
 In Python, each element of a list can be identified by a positive or a negative index. We use positive indices when we consider elements from left to right and negative indices when we consider elements  from right to left. Positive indices start from 0 and increase of 1 unit (0, 1, 2, etc.). Negative indices  start from -1 and decrease of 1 unit (-1, -2, -3, etc.). Note that negative indices do not start from 0 to  avoid ambiguity: the element in position 0 is always the first element of the list starting from the left  side. When are negative indices convenient? For example, when we are dealing with a very long list.  In that case, it would be tedious to count through all elements starting from 0. So we can just count  backwards starting from the last element.
+
+---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="600" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ### 7. Slice "Melbourne":
 
@@ -873,13 +878,13 @@ would cause an error:
 ```
 NameError: name 'senses' is not defined
 ```
-<!-- SUBSECTION -->
+
 **Explanation:**
 
 After using `del senses`, the variable no longer exists.
 
 ---
-
+<!-- SUBSECTION -->
 Recap
 
 - You can **replace** list elements by assigning to a slice.
@@ -895,7 +900,7 @@ Have a play with the content we've learned so far in the IDE below:
 # Part 3. Introduction to the for loop
 
 ---
-<!-- SUBSECTION -->
+
 ## for... in range()
 
 The for loop allows us to repeatedly execute commands.
@@ -928,7 +933,7 @@ This reads; for index in range from zero to four, print index: concatenated with
 
 Output:
 
-```
+```Blahblah
 index: 0 
 friend: Geetha 
 index: 1 
@@ -978,6 +983,9 @@ A for loop:
 - `str()` is a built-in Python function that converts a variable into a string
 
 ---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ## For loop with if... ==... / else…
 
@@ -1025,7 +1033,8 @@ The header of the for loop at line 2 contains two changes from the syntax we saw
 Let’s analyze the body of the for loop. At line 3, we print a string stating that we are at the beginning of a loop. It is meant to be visually different to make the printouts of each iteration easy to identify.  Beyond *Beginning of loop*, we could use sentences like New iteration, New loop, etc. To increase the  visibility, we can also use symbols before and/or after the text—such as dashes (---) in this example. Alternatives can be arrows (-->), tildes (~~~), or any other character on the keyboard. 
 
 At line 5, we  print out each element and its position in a sentence composed of four parts concatenated to each other. The first and the third parts—"The element in position " and " is "—are two hard-coded  strings. The second element is the index of the current loop. It’s an integer, so we use the built-in function `str()` to convert it into a string. Finally, the last element (`animals[i]`) is a string, containing a list element sliced in a different position `i` at each iteration—that is, "giraffe", "penguin", or "dolphin".  Finally, lines 1 and 4 start with the hash symbol (`#`) and are followed by text. These lines are called comments.
-
+<!-- SUBSECTION -->
+### **Comments**
 > Comments are code descriptions or explanations.
 > 
 
@@ -1090,6 +1099,9 @@ To make sure that what this code does is clear, let’s go through the for loop 
 - Comments start with the hash symbol `#`, and they are descriptions or explanations
 
 ---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ## Other uses for For loops
 
@@ -1190,12 +1202,16 @@ The authors on the shelf S are: ['Saint-Exupéry', 'Sepulveda', 'Shakespeare']
 String slicing works the same way as list slicing. In multiple consecutive slicings, we execute one slicing at a time, starting from the left.
 
 The special character "\n" creates an empty line after a print
+---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- END section3 -->
 <!-- START section4 -->
 # Part 4. Numbers and algorithms
 
 ---
-<!-- SUBSECTION -->
+
 ## Integers, floats, and arithmetic operations
 
 > In coding, we often manipulate numbers.
@@ -1337,6 +1353,10 @@ Choose an operation (+, -, *, /): *
 14.0
 
 ```
+---
+Have a play with this calculator code!
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ### **Understanding the `elif` keyword**
 
@@ -1396,6 +1416,9 @@ Always know whether you are working with strings, ints, or floats when coding ma
 - `type()` checks the data type of a variable.
 
 ---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 
 ## Common Operations with Lists of Numbers
@@ -1509,6 +1532,9 @@ When dealing with lists of numbers, some of the basic tasks are:
 - Finding the maximum (or minimum) number in a list
 
 ---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ## **The Python Module `random`**
 
@@ -1578,6 +1604,9 @@ Alternatively, we can use **`random.choice()`** to directly pick a random mess
     - **`.choice(list_name)`**: returns a random element from a list.
 
 ---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- SUBSECTION -->
 ## Introduction to programs
 
@@ -1704,6 +1733,10 @@ What is  an algorithm?
 - Debugging helps identify and fix errors in the code.
 - Maintaining parallelism in code improves readability.
 - Testing is essential to verify that the code functions as intended.
+---
+Have a play with the content we've learned so far in the IDE below: 
+
+<iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="400" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 <!-- END section4 -->
 <!-- START section5 -->
 # Part 5. The while loop and conditions
