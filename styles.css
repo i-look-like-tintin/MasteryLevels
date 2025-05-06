@@ -1,52 +1,23 @@
-/* General styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #5c455a;
+    background-color: #f5f5f5;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Default light theme */
-body.light-mode {
-    background-color: #fff;
-    color: #333;
-}
 
-body.dark-mode {
-    background-color: #333;
-    color: #fff;
-}
-
-/* Button for toggling modes */
-.toggle-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #4A90E2;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.toggle-btn:hover {
-    opacity: 0.9;
-}
-
-/* Other styles */
 .level-btn {
     background-color: #4A90E2;
-    color: hotpink;
+    color: white;
     padding: 12px 20px;
     border-radius: 4px;
     text-decoration: none;
@@ -60,6 +31,7 @@ body.dark-mode {
     cursor: not-allowed !important;
     pointer-events: none !important;
 }
+
 
 /* Login container */
 .login-container {
@@ -91,9 +63,10 @@ body.dark-mode {
     font-size: 16px;
 }
 
+/* General button styling with gradient */
 button, .btn, .home-btn, .level-btn, .complete-btn {
     background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
-    color: pink;
+    color: white;
     padding: 12px;
     border: none;
     border-radius: 30px;
@@ -103,8 +76,6 @@ button, .btn, .home-btn, .level-btn, .complete-btn {
     display: inline-block;
     transition: background-color 0.3s ease;
 }
-
-
 
 /* Finish Exam button styling with gradient */
 .fin-btn {
@@ -135,7 +106,7 @@ button:hover, .btn:hover, .home-btn:hover, .level-btn:hover, .complete-btn:hover
 }
 
 .login-container a {
-    color: #f52ad3;
+    color: #007BFF;
     text-decoration: none;
 }
 
@@ -155,7 +126,7 @@ button:hover, .btn:hover, .home-btn:hover, .level-btn:hover, .complete-btn:hover
     align-items: center;
     font-size: 24px;
     font-weight: bold;
-    color: #f52ad3;
+    color: #333;
 }
 
 body.dashboard {
@@ -684,6 +655,81 @@ table td {
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .markdown-body {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        /* Headers */
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3em;
+        }
+        
+        /* Paragraphs */
+        .markdown-body p {
+            margin: 1em 0;
+        }
+        
+        /* Lists */
+        .markdown-body ul, .markdown-body ol {
+            margin: 1em 0 1em 1.5em;
+        }
+        
+        /* Inline code */
+        .markdown-body code {
+            background: #f4f4f4;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        /* Code blocks */
+        .markdown-body pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 1em;
+            overflow-x: auto;
+            border-radius: 5px;
+        }
+        
+        /* Images */
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Blockquotes */
+        .markdown-body blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1em;
+            color: #555;
+            margin: 1em 0;
+        }
+        #markdown-body {
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+        
+        /* When fading out */
+        #markdown-body.fade-out {
+            opacity: 0;
+        }
          /* AI CHAT TESTING*/
 /*Honestly not sure which of these will work, but my money is on the top one lol*/
         /* Chat bubble button */
@@ -751,73 +797,3 @@ table td {
             cursor: pointer;
         }
          /* AI CHAT TESTING*/
-
-@media (prefers-color-scheme: dark) {
-    body, .login-container, .dashboard-section, .exam-container {
-        background-color: #1e1e1e;
-        color: #f525cb;
-    }
-
-    .login-container, .dashboard-section, .exam-container {
-        box-shadow: 0 8px 16px rgba(255, 255, 255, 0.05);
-    }
-
-    input, select {
-        background-color: #2a2a2a;
-        color: #f525cb;
-        border: 1px solid #37169c;
-    }
-
-    a {
-        color: #f525cb;
-    }
-
-    a:hover {
-        color: #f525cb;
-    }
-
-    .dashboard-header,
-    .login-container,
-    .dashboard-section,
-    header.dashboard-header {
-        background-color: #2b2b2b;
-        color: #f525cb;
-    }
-
-    .table-tools input[type="search"],
-    .table-tools select {
-        background-color: #2a2a2a;
-        border: 1px solid #37169c;
-        color: #f525cb;
-    }
-
-    table th {
-        background-color: #444;
-        color: #f525cb;
-    }
-
-    table td {
-        background-color: #2a2a2a;
-        color: #f525cb;
-    }
-
-    .level-progress th, .level-progress td,
-    .progress-table th, .progress-table td {
-        background-color: #2a2a2a;
-        color: #f525cb;
-    }
-
-    .chat-window {
-        background-color: #1e1e1e;
-        color: #f525cb;
-    }
-
-    .chat-input {
-        border-top: 1px solid #37169c;
-    }
-
-    .chat-input input {
-        background-color: #2a2a2a;
-        color: #f525cb;
-    }
-}
