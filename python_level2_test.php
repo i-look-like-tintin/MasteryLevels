@@ -66,7 +66,10 @@ while ($row = $questionResult->fetch_assoc()) {
 <head>
     <meta charset="UTF-8">
     <title>Python Level 1 Test</title>
-    <link rel="stylesheet" href="your_existing_styles.css"> <!-- if you want -->
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
     <style>
         /* Extra Clean Styling */
         body {
@@ -112,7 +115,7 @@ while ($row = $questionResult->fetch_assoc()) {
         }
         .coding-question-section {
             background: #eef2f7;
-            padding: 20px;
+            padding: 50px;
             border-radius: 8px;
         }
         .instructions {
@@ -128,6 +131,7 @@ while ($row = $questionResult->fetch_assoc()) {
             border: 1px solid #ccc;
             border-radius: 6px;
             resize: vertical;
+            background: #f9f9f9;
         }
         .submit-section {
             text-align: center;
@@ -162,6 +166,65 @@ while ($row = $questionResult->fetch_assoc()) {
             background: #ddd;
             margin: 30px 0;
         }
+        #codeMirror {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1em;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    z-index: 1;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: #1e1e1e;
+}
+#language-python {
+    pointer-events: none;      /* prevent interaction */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding: 1em;
+    border-radius: 6px;
+
+
+}
+#codeEditor {
+    position: relative;
+    z-index: 2;
+    padding: 1em;
+    width: 100%;
+    min-height: 200px;
+    color: transparent;
+    background: transparent;
+    border: none;
+    resize: none;
+    overflow: auto;
+    caret-color: #ffffff; /* make cursor visible */
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+#codeInput {
+    position: relative;
+    background: #1e1e1e;
+    color: #000;
+    z-index: 2;
+    font-size: 1pt;
+}
+.code-editor-wrapper {
+    position: relative;
+    width: 96%;
+    max-width: 900px;
+    min-height: 200px;
+    max-height: 250px;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    line-height: 1.4;
+}
         
     </style>
 </head>
@@ -221,9 +284,30 @@ while ($row = $questionResult->fetch_assoc()) {
 
             <h2 class="question-text">Python Coding Question:</h2>
             <p class="instructions">Write Python code to instantiate a variable named 'myVariable' with the value of 3. The program should then square this variable, and print the result.</p>
-            <textarea name="code_answer" class="code-textarea" id="codeEditor" 
+            <div class="code-editor-wrapper">
+            <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
             required spellcheck="false"></textarea>
+            <pre><code id="codeMirror" class = "language-python"></code></pre>
+            </div>
+            <script>
+                const input = document.getElementById("codeEditor");
+    const mirror = document.getElementById("codeMirror");
+
+input.addEventListener("input", () => {
+    // Copy and escape content
+    const code = input.value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    
+    mirror.innerHTML = code;
+    console.log(code);
+    // Re-highlight
+    mirror.removeAttribute("data-highlighted");
+    hljs.highlightElement(mirror);
+});
+            </script>
             <script>
                 document.getElementById('codeEditor').addEventListener('keydown', function(e) {
                 if (e.key === 'Tab') {
@@ -236,6 +320,7 @@ while ($row = $questionResult->fetch_assoc()) {
 
         // Move caret
         this.selectionStart = this.selectionEnd = start + 4;
+        hljs.highlightAll();
     }
 });
 </script>
