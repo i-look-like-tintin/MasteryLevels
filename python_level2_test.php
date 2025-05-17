@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 session_start();
 
 
@@ -332,6 +330,21 @@ input.addEventListener("input", () => {
 
 <script type="text/javascript"> 
     document.getElementById("codeEditor").innerHTML="universities=['UoC','ANU','ADFA']";
+    function highlightPreset(){
+        const input = document.getElementById("codeEditor");
+        const mirror = document.getElementById("codeMirror");
+        // Copy and escape content
+        const code = input.value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    
+        mirror.innerHTML = code;
+        // Re-highlight
+        mirror.removeAttribute("data-highlighted");
+        hljs.highlightElement(mirror);
+    }
+    highlightPreset();
     function builtinRead(x) {
         if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
         throw `File not found: '${x}'`;
