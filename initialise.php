@@ -15,12 +15,15 @@ if ($conn->connect_error) {
     echo "<script>console.error('Database connection failed: " . addslashes($conn->connect_error) . "');</script>";
     die("Connection failed: " . $conn->connect_error);
 }
-
-
-
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 $conn->query($sql);
+
+$tableCount = $conn->query("SELECT COUNT(*) > 0 AS has_tables
+FROM information_schema.tables
+WHERE table_schema = '$dbName';");
+
+if ($tableCount === 0) {
 
 // Select the database
 $conn->select_db($dbname);
@@ -781,4 +784,14 @@ $conn->close();
     $_SESSION['initialised'] = true;
     echo "<script>console.log('Initialisation complete, redirecting back to login.php...'); window.location.href = 'login.php';</script>";
     exit();
+    
+    
+}
+else{
+    $conn->close();
+
+    $_SESSION['initialised'] = true;
+    echo "<script>console.log('Initialisation complete, redirecting back to login.php...'); window.location.href = 'login.php';</script>";
+    exit();
+}
     ?>
