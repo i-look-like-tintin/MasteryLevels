@@ -95,11 +95,11 @@ foreach ($_POST as $key => $value) {
 }
 
 // Handle submitted code
-if (isset($_POST['code_answer']) && !empty(trim($_POST['code_answer']))) {
+if (isset($_POST['code_answer']) && !empty(trim($_POST['code_answer'])) && isset($_POST['code_correct'])) {
     $codeAnswer = trim($_POST['code_answer']);
-
-    // Assume code is correct — add +1 point
-    $correctAnswers++;
+    $codeCorrect = $_POST['code_correct'];
+    // If code correct, add 1
+    if($codeCorrect) $correctAnswers++;
     $totalQuestions++;
 
     // Insert code into code_submissions table
