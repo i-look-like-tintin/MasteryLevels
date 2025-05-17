@@ -69,6 +69,9 @@ while ($row = $questionResult->fetch_assoc()) {
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt-stdlib.js"></script>
     <script>hljs.highlightAll();</script>
     <style>
         /* Extra Clean Styling */
@@ -233,7 +236,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <div class="main-content">
     <h1 class="page-title">Python Level 1 Test</h1>
 
-    <form action="submit_exam.php" method="post" class="exam-form">
+    <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
     <input type="hidden" name="subject" value="Python Level 1">
     <div style="text-align: right; margin-bottom: 20px;">
     <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
@@ -283,16 +286,20 @@ while ($row = $questionResult->fetch_assoc()) {
 <iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 
             <h2 class="question-text">Python Coding Question:</h2>
-            <p class="instructions">Write Python code to instantiate a variable named 'myVariable' with the value of 3. The program should then square this variable, and print the result.</p>
+            <p class="instructions">Write Python code that asks the user's name and prints the result.</p>
             <div class="code-editor-wrapper">
             <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
             required spellcheck="false"></textarea>
+            <input id="code_correct" hidden name="code_correct"></input>
             <pre><code id="codeMirror" class = "language-python"></code></pre>
+            <b></b>
+            
             </div>
+
             <script>
                 const input = document.getElementById("codeEditor");
-    const mirror = document.getElementById("codeMirror");
+                const mirror = document.getElementById("codeMirror");
 
 input.addEventListener("input", () => {
     // Copy and escape content
@@ -302,7 +309,6 @@ input.addEventListener("input", () => {
         .replace(/>/g, "&gt;");
     
     mirror.innerHTML = code;
-    console.log(code);
     // Re-highlight
     mirror.removeAttribute("data-highlighted");
     hljs.highlightElement(mirror);
@@ -324,14 +330,66 @@ input.addEventListener("input", () => {
     }
 });
 </script>
+
+<script type="text/javascript"> 
+    function builtinRead(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+        throw `File not found: '${x}'`;
+        return Sk.builtinFiles["files"][x];
+}
+
+    function runSkulptCode() {
+        const code = document.getElementById("codeEditor").value;
+        const outputElement = document.getElementById("output");
+        const resultField = document.getElementById("code_correct");
+        outputElement.innerHTML = ""; // Clear previous output
+
+        const inputAssignment = code.match(/(\w+)\s*=\s*input\s*\(.*?\)/);
+        const usesInput = !!inputAssignment;
+        const usesPrint = /print\s*\((.*?)\)/.test(code);
+        let printsInput = false;
+        if (inputAssignment && inputAssignment[1]) {
+            const varName = inputAssignment[1];
+
+            // Check if the print statement references that variable
+            const printRegex = new RegExp(`print\\s*\\((.*\\b${varName}\\b.*)\\)`);
+            printsInput = printRegex.test(code);
+        }
+
+        if (usesInput && usesPrint && printsInput) {
+            resultField.value = 1;
+            return true;
+        } else {
+            resultField.value = 0;
+            return false;
+        }
+        Sk.configure({
+            output: function (text) {
+                outputElement.innerHTML += text.replace(/\n/g, "<br>");
+            },
+            read: builtinRead,
+            inputfun: function (promptText) {
+                return window.prompt(promptText); // Simple browser prompt
+            },
+            inputfunTakesPrompt: true
+        });
+
+    // Run asynchronously to avoid freezing the UI
+        Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
+            .catch((err) => {
+                outputElement.innerHTML += `<br><span style="color: red;">${err.toString()}</span>`;
+            });
+    }              
+</script>
         </div>
 
         <div class="submit-section">
             <button type="submit" class="submit-button">Submit Test</button>
+
         </div>
 
     </form>
 </div>
-
+            <div id="output" hidden>Output</div>
 </body>
 </html>

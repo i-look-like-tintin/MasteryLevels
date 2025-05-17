@@ -42,9 +42,9 @@ $questionQuery = "
     SELECT q.questionID, q.question 
     FROM Questions q
     INNER JOIN Levels l ON q.levelID = l.levelID
-    WHERE l.levelID <= 4
+    WHERE l.levelID > 4 AND l.levelID <= 8
     ORDER BY RAND()
-    LIMIT 3
+    LIMIT 3;
 ";
 
 $questionResult = $conn->query($questionQuery);
@@ -69,9 +69,11 @@ while ($row = $questionResult->fetch_assoc()) {
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt-stdlib.js"></script>
     <script>hljs.highlightAll();</script>
     <style>
-        /* Extra Clean Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9f9f9;
@@ -182,7 +184,7 @@ while ($row = $questionResult->fetch_assoc()) {
     background: #1e1e1e;
 }
 #language-python {
-    pointer-events: none;      /* prevent interaction */
+    pointer-events: none;     
     position: absolute;
     top: 0;
     left: 0;
@@ -203,7 +205,7 @@ while ($row = $questionResult->fetch_assoc()) {
     border: none;
     resize: none;
     overflow: auto;
-    caret-color: #ffffff; /* make cursor visible */
+    caret-color: #ffffff; 
     font-family: 'Fira Code', monospace;
     font-size: 1rem;
     line-height: 1.4;
@@ -231,10 +233,10 @@ while ($row = $questionResult->fetch_assoc()) {
 <body>
 
 <div class="main-content">
-    <h1 class="page-title">Python Level 1 Test</h1>
+    <h1 class="page-title">Python Level 2 Test</h1>
 
-    <form action="submit_exam.php" method="post" class="exam-form">
-    <input type="hidden" name="subject" value="Python Level 1">
+    <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
+    <input type="hidden" name="subject" value="Python Level 2">
     <div style="text-align: right; margin-bottom: 20px;">
     <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
 </div>
@@ -283,16 +285,20 @@ while ($row = $questionResult->fetch_assoc()) {
 <iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 
             <h2 class="question-text">Python Coding Question:</h2>
-            <p class="instructions">Write Python code to instantiate a variable named 'myVariable' with the value of 3. The program should then square this variable, and print the result.</p>
+            <p class="instructions">Given this list of Canberra Universities, write Python code that will print a slice of the list containing only ANU.</p>
             <div class="code-editor-wrapper">
             <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
             required spellcheck="false"></textarea>
+            <input id="code_correct" hidden name="code_correct"></input>
             <pre><code id="codeMirror" class = "language-python"></code></pre>
+            <b></b>
+            
             </div>
+
             <script>
                 const input = document.getElementById("codeEditor");
-    const mirror = document.getElementById("codeMirror");
+                const mirror = document.getElementById("codeMirror");
 
 input.addEventListener("input", () => {
     // Copy and escape content
@@ -302,7 +308,6 @@ input.addEventListener("input", () => {
         .replace(/>/g, "&gt;");
     
     mirror.innerHTML = code;
-    console.log(code);
     // Re-highlight
     mirror.removeAttribute("data-highlighted");
     hljs.highlightElement(mirror);
@@ -324,14 +329,56 @@ input.addEventListener("input", () => {
     }
 });
 </script>
+
+<script type="text/javascript"> 
+    document.getElementById("codeEditor").innerHTML="universities=['UoC','ANU','ADFA']";
+    function builtinRead(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+        throw `File not found: '${x}'`;
+        return Sk.builtinFiles["files"][x];
+}
+
+    function runSkulptCode() {
+        const code = document.getElementById("codeEditor").value;
+        const outputElement = document.getElementById("output");
+        const resultField = document.getElementById("code_correct");
+        outputElement.innerHTML = ""; // Clear previous output
+        validateCode();
+        if (outputElement.innerHTML === "['ANU']"){
+            resultField.value = 1;
+            return true;
+        }
+        else{
+            resultField.value=0;
+            return false;
+        }
+    }
+        function validateCode(){
+            Sk.configure({
+                output: function (text) {
+                    outputElement.innerHTML += text.replace(/\n/g, "<br>");
+                },
+                read: builtinRead,
+                inputfun: function (promptText) {
+                    return window.prompt(promptText); // Simple browser prompt
+                },
+                inputfunTakesPrompt: true
+            });
+        Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
+            .catch((err) => {
+                outputElement.innerHTML += `<br><span style="color: red;">${err.toString()}</span>`;
+            });
+    }        
+</script>
         </div>
 
         <div class="submit-section">
             <button type="submit" class="submit-button">Submit Test</button>
+
         </div>
 
     </form>
 </div>
-
+            <div id="output" hidden>Output</div>
 </body>
 </html>
