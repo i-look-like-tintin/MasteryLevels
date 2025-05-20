@@ -30,7 +30,7 @@ if($tableCountResult){
 }
 
 if (!$hasTables) {
-
+echo "<script>console.log('Dropping....');</script>";
 // Select the database
 $conn->select_db($dbname);
 $sqlTemp = "DROP DATABASE exam_website";
