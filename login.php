@@ -1,6 +1,6 @@
 <?php
 
-session_start(); // Always start session at top
+session_start();
 
 if (!isset($_SESSION['initialised']) || $_SESSION['initialised'] !== true) {
     header("Location: initialise.php");
@@ -21,7 +21,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 // Create the database if it doesn't exist
-$conn->query("CREATE DATABASE IF NOT EXISTS $database");
+
 $conn->select_db($database);
 if($_SESSION)  
 // Handle login form submission

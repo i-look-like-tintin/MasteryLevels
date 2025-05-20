@@ -59,7 +59,7 @@ $percentage = ($total > 0) ? round(($score / $total) * 100, 1) : 0;
 $submittedCode = "";
 
 $stmt = $conn->prepare("
-    SELECT code
+    SELECT code, question
     FROM code_submissions
     WHERE student_id = ? AND subject = ?
     ORDER BY submission_time DESC

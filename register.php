@@ -26,7 +26,6 @@ $conn->query("CREATE DATABASE IF NOT EXISTS $database");
 $conn->select_db($database);
 
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -54,17 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$createCodeSubmissionsTable = "CREATE TABLE IF NOT EXISTS code_submissions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT UNSIGNED,
-    subject VARCHAR(255) NOT NULL,
-    code TEXT NOT NULL,
-    submission_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
-);";
-if ($conn->query($createCodeSubmissionsTable) === FALSE) {
-    die("Error creating code submissions table: " . htmlspecialchars($conn->error));
-}
+
+
 
 $conn->close();
 ?>

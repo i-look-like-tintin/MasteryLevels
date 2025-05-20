@@ -98,16 +98,17 @@ foreach ($_POST as $key => $value) {
 if (isset($_POST['code_answer']) && !empty(trim($_POST['code_answer'])) && isset($_POST['code_correct'])) {
     $codeAnswer = trim($_POST['code_answer']);
     $codeCorrect = $_POST['code_correct'];
+    $codeQuestion = $_POST['code_question'];
     // If code correct, add 1
     if($codeCorrect) $correctAnswers++;
     $totalQuestions++;
 
     // Insert code into code_submissions table
     $stmtCode = $conn->prepare("
-        INSERT INTO code_submissions (student_id, subject, code)
-        VALUES (?, ?, ?)
+        INSERT INTO code_submissions (student_id, subject, code, question, correct)
+        VALUES (?, ?, ?, ?, ?)
     ");
-    $stmtCode->bind_param("iss", $currentUserId, $subject, $codeAnswer);
+    $stmtCode->bind_param("isssi", $currentUserId, $subject, $codeAnswer, $codeQuestion, $codeCorrect);
     $stmtCode->execute();
     $stmtCode->close();
 }

@@ -12,7 +12,7 @@ if (!isset($_SESSION['user']))
 }
 $currentUserId = $_SESSION['id'];
 
-//database connection
+//database connection 
 $host = 'localhost';
 $db_username = 'root';
 $db_password = '';
@@ -30,8 +30,7 @@ if (!isset($_GET['subject']) || empty($_GET['subject'])) {
 $subject = $conn->real_escape_string($_GET['subject']);
 if(str_contains($subject, "Python Level")){
 
-    //TODO: This might not be super duper stable
-    //But then again, perceived stability is a social construct
+
     $query = "SELECT 
     sr.student_id,
     sr.question_id,
@@ -48,7 +47,9 @@ if(str_contains($subject, "Python Level")){
         LIMIT 1
     ) AS wrong_answer,
     cs_latest.code AS submitted_code,
-    cs_latest.submission_time
+    cs_latest.submission_time,
+    cs_latest.correct AS code_correct,
+    cs_latest.question AS code_question
     FROM student_progress sr
     JOIN Questions q ON sr.question_id = q.questionID
     JOIN Answers ca ON q.questionID = ca.questionID AND ca.correct = TRUE
@@ -206,9 +207,16 @@ ob_end_flush();
         </table>
         <?php //TODO: Check if code was marked correct
                         if (!empty($question['submitted_code']) && str_contains($subject, "Python Level")) {
+                            $correct="";
+                            if($question['code_correct'] === 1){
+                                $correct="  Correct ✔️";
+                            }
+                            else $correct=" Incorrect ❌";
                             echo '<div class="code-submission-box">';
                             echo '<h4>Submitted Code:</h4>';
                             echo '<pre>' . htmlspecialchars($question['submitted_code']) . '</pre>';
+                            echo '<b> </b>';
+                            echo '<h2>' . $correct . '</h2>';
                             echo '</div>';
                          }
                     ?>
