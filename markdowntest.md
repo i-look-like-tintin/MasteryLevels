@@ -906,7 +906,6 @@ Have a play with the content we've learned so far in the IDE below:
 The for loop allows us to repeatedly execute commands.
 
 > A for loop is the repetition of a group of commands for a determined number of times.
-> 
 
 It consists of five  components:  
 
@@ -1671,7 +1670,7 @@ To make the game more engaging, we can implement a loop that allows the player t
 18         break  # Exit the loop if the player does not want to continue
 
 ```
-
+<!-- SUBSECTION -->
 ### **Debugging**
 
 > Debugging means identifying and removing errors from code.
@@ -1837,6 +1836,7 @@ A while loop stops when the condition in the header is not true anymore. We alwa
 - When updating a variable with an arithmetic operation, we can use the corresponding assignment operator, that is, `+=`, `-=`, etc.
 
 ---
+<!-- SUBSECTION -->
 
 ## Combining and reversing conditions
 
@@ -2025,6 +2025,8 @@ We start by importing the package `random` (line 1). Then, we create a for loop 
 
 ---
 
+<!-- SUBSECTION -->
+
 ## Booleans
 
 > Booleans are a variable type. They can have only two values: True or False
@@ -2173,6 +2175,7 @@ You can access elements in a list using their index, which starts at 0:
 4 print(fruits[1])   # Output: banana
 
 ```
+<!-- SUBSECTION -->
 
 ### **List Methods**
 
@@ -2256,6 +2259,8 @@ cherry
 - Line 2: `for fruit in fruits` means: for each element inside the list `fruits`, assign it temporarily to `fruit`.
 - Line 3: `print(fruit)` outputs the current item.
 
+<!-- SUBSECTION -->
+
 ### **For loop with lists**
 
 There are at least 4 ways to use the for loop with lists. 
@@ -2325,6 +2330,8 @@ There are at least 4 ways to use the for loop with lists.
     ![Figure 6.1. Schematics of a for loop through indices, where an index browses positions (orange), and a for loop through elements, where a variable browses elements (yellow).](PythonPathways%201e9c242da244801f9e94cc2f55e9a45b/image%203.png)
     
     Figure 6.1. Schematics of a for loop through indices, where an index browses positions (orange), and a for loop through elements, where a variable browses elements (yellow).
+
+<!-- SUBSECTION -->
     
 3. **For loop through indices and elements**  
     
@@ -2367,6 +2374,8 @@ There are at least 4 ways to use the for loop with lists.
     
     During the for loop in this example, the variable `i` is assigned the first element of each pair—that is, 0, 1, and 2—and the variable `last_name` is assigned the second element of each pair—that is, ‘garcia', ‘smith', and `zhang'. In the remaining part of the  example, first we print the position of each element `i` and its value `last_name` (line 4). Then, we apply the method `.title()` to l`ast_name`, and we assign the result to the element in the same position  `last_names[i]` (line 5). Finally, we print the resulting list (line 6). The **for loop through indices and  positions is useful when we need to extract both positions and elements of a whole list.**
     
+<!-- SUBSECTION -->
+
 4. **List Comprehension**
     
     The fourth and last method to use a for loop in combination with lists is called list comprehension. It might look complex at first glance, but we are going to untangle it right away!  - 
@@ -2460,6 +2469,7 @@ There are at least 4 ways to use the for loop with lists.
     
     When deleting elements with list comprehensions, we have to think about the elements that we are  going to keep, not about those that we are going to delete. This is because in a list comprehension, in the first position we must write the element that we are going to insert into the list. Thus, if we want to delete the elements whose length is 5, we need to reverse our thinking and write the condition that  allows us to keep the elements whose length is not equal to 5—that is if `len(last_name) != 5` (line  2).
     
+<!-- SUBSECTION -->
 
 ### **Nested `for` loops**
 
@@ -2588,6 +2598,8 @@ We can have more loops nested within each other. As a convention, the index name
 
 ---
 
+<!-- SUBSECTION -->
+
 ## Slicing, nested for loops, and flattening
 
 > A list of lists is a list whose elements are lists
@@ -2639,6 +2651,8 @@ rabbit
 ['panda', 'elephant', 'giraffe']
 
 ```
+
+<!-- SUBSECTION -->
 
 To extract sub-elements, we use double slicing, where the **first slicing—indicated by the first pair of  square brackets—extracts a sub-list and the second slicing—indicated by the second pair of square  brackets—extracts one or more sub-elements**. 
 
@@ -2728,6 +2742,8 @@ Explanation of the flow:
     - **Fourth inner loop**: `sport` is "surfing".
 
 The inner for loop finishes, and the outer loop completes as well after going through all sub-lists.
+
+<!-- SUBSECTION -->
 
 ### **Flattening**
 
@@ -2854,6 +2870,8 @@ The syntax `[instrument for group in instruments for instrument in group]` essen
 - For each `group` in `instruments`, and for each `instrument` in that `group`, include `instrument` in the new list.
 
 Finally, we print the flattened list (line 2).
+
+<!-- SUBSECTION -->
 
 ### **Recap**
 
@@ -3010,6 +3028,8 @@ Output:
 
 Also in this case, there are two possibilities. The first way to delete an item is to use the keyword `del`, followed by the dictionary name and the key enclosed within square brackets (`classics["Austen"]`; line 2). The second way is to use the method `.pop()`, with the key of the item to delete as an argument (line 6). (Once more, this is similar to lists, where we use the method `.pop()` to delete an element based on its position.) After each deletion, we print the dictionary to check for correctness (lines 3 and 7).
 
+<!-- SUBSECTION -->
+
 | **Dictionary Method** | **What it does** |
 | --- | --- |
 | `.items()` | Returns a view object that displays a list of a dictionary's key:value pairs. |
@@ -3027,6 +3047,8 @@ Also in this case, there are two possibilities. The first way to delete an item 
 - To delete an item, we use the keyword `del` or the method `.pop()`.
 
 ---
+
+<!-- SUBSECTION -->
 
 ## Dictionaries with lists as values
 
@@ -3191,6 +3213,8 @@ Output:
 
 ```
 
+<!-- SUBSECTION -->
+
 In the for loop header, we use only the variable `v` in combination with the method `.values()` (line 1), and we print `v` only (line 2).
 
 Finally, let’s have a look at one more elegant way to print dictionaries:
@@ -3234,6 +3258,8 @@ What about the colon between the two placeholders? It is simply the colon printe
     - Using placeholders `{}` in combination with the string method `.format()`.
 
 ---
+
+<!-- SUBSECTION -->
 
 ## What are dictionaries for?
 
@@ -3282,7 +3308,9 @@ Dictionaries are extremely convenient when we need to save occurrences, that is,
     ```
     
     We start with an empty dictionary called `letter_counter` (line 1). We browse each character of the string `greetings` using a for loop through elements (line 3). Then, for each character, we check if it is a key of `letter_counter` and we act accordingly (lines 4–7). If the current character is not already a key of `letter_counter`, we add a new key:value pair, where the key is `letter`, and the value is 1 (line 5). If the current character is already a key in `letter_counter`, then we add 1 to the already existing corresponding value (line 7).
-    
+
+<!-- SUBSECTION -->
+
 2. **Using .get():**
     
     ```python
@@ -3386,6 +3414,8 @@ Output:
 
 We start by creating a list of zeros called `sparse_vector_back` of the same length as the original list `sparse_vector`. To create `sparse_vector_back`, we use list replication, where we replicate a list containing a zero (`[0]`) for a number of times equal to the length of the original list—whose value we saved in correspondence with the key "length". Then, we overwrite the nonzero values into the list. With a for loop, we browse each key:value pair in the dictionary (line 5). If the current key is not equal to "length" (line 6), we assign the current value `v`, which represents the magnitude of a spike, to the list `sparse_vector_back` in position `k` (line 7). Finally, we print the list to check for correctness (line 10).
 
+<!-- SUBSECTION -->
+
 ### **Sorting Dictionaries**
 
 In this last example about dictionaries and their applications, we will learn how to sort dictionaries according to their keys or values. Consider a simplified city registry containing citizens’ names as keys and their ages as values. Officers might need to sort the registry according to names to send out letters, or according to age to distinguish the kids from the elderly. Let’s see how to do it!
@@ -3453,6 +3483,7 @@ To sort a dictionary according to values, we create an empty dictionary (line 2)
 - The built-in function `sorted()` is used to sort a dictionary; note that it creates a new variable.
 
 ---
+<!-- SUBSECTION -->
 
 ## Strings: Operations, methods, and printing
 
@@ -3483,6 +3514,8 @@ reward
 ```
 
 The start is the beginning of the string, so we can omit it. Similarly, the stop is the end of the string, so we can omit it too. The *step* is 2. The outcome is `reward` (line 1).
+
+<!-- SUBSECTION -->
 
 - **Extract every second character and invert the outcome:**
 
@@ -3578,6 +3611,8 @@ TypeError: 'str' object does not support item assignment
 Why do we get this error?
 
 Because in Python, **strings are immutable**—they cannot be changed by assignment. To modify a string, we must use slicing combined with concatenation or string methods.
+
+<!-- SUBSECTION -->
 
 - **Redo the same task using slicing and concatenation:**
 
@@ -3705,6 +3740,8 @@ Explanation:
 - Line 2 removes commas by replacing them with an empty string.
 - Line 3 prints the result.
 
+<!-- SUBSECTION -->
+
 ### Searching a Substring in a String
 
 How do we find a substring in a string? Let’s see below!
@@ -3809,6 +3846,7 @@ This is a trick that is often used in conditions, such as:
 2     print("Character not found!")
 
 ```
+<!-- SUBSECTION -->
 
 ### Counting the Number of Substrings in a String
 
@@ -3847,6 +3885,8 @@ The substring is present **4 times**:
 - traveling
 - singing
 - (and possibly overlapping or concatenated ones in how Python counts)
+
+<!-- SUBSECTION -->
 
 ### **String to List and Back**
 
@@ -3896,6 +3936,8 @@ How are you
 ```
 
 The method `.join()` connects the elements of the list in the argument, separating them with the string it refers to. In our case, the list in the argument is `list_of_strings`, which contains the three strings "How", "are", and "you". The string to which `.join()` is applied is a space—that is, `" "` (line 1). The command might look peculiar at first because we apply the method directly to the string value `" ".join()`. As an alternative, we could assign the space to a variable—`space = " "`—and then apply the method to the variable—`space.join()`. To conclude the task, we print `list_of_strings` to check for correctness (line 2).
+
+<!-- SUBSECTION -->
 
 ### Changing Character Cases
 
@@ -3964,6 +4006,8 @@ In previous chapters, we learned that the arguments of the built-in function `pr
 3. A string in combination with the method `.format()` 
 
 We’ll now explore those and also f-strings and better ways to print numerical variables.
+
+<!-- SUBSECTION -->
 
 - **Given the following string:**
 
@@ -4102,6 +4146,8 @@ With `.format()` (line 6), `{:.2f}` formats the float to 2 decimals.
 
 F-strings (line 8) use the same format, just placed inside the `{}` directly.
 
+<!-- SUBSECTION -->
+
 ### **Recap**
 
 - In strings, slicing and the “arithmetic” operations (concatenation and replication) work the same  way as for lists
@@ -4188,6 +4234,8 @@ A function definition has several parts:
 4. **Docstring**: A triple double-quoted block that documents what the function does and describes each parameter.
 5. **Body**: Indented code block that defines the actions of the function.
 
+<!-- SUBSECTION -->
+
 ### **Formal Thank You Cards**
 
 - After a second thought, you decide that it is more appropriate to print formal Thank you cards. Modify the previous function to take three arguments—prefix, first name, and last name—and to print  a thank you message containing them (e.g., Thank you Mrs Maria Lopez):
@@ -4250,6 +4298,7 @@ The function will now print:
 Thank you Dr. John Doe
 
 ```
+<!-- SUBSECTION -->
 
 ### **Default Argument**
 
@@ -4295,6 +4344,8 @@ Thank you Mr Xiao
 In the function header, we assign a default value to the input that can be missed when calling the  function. In our case, we assign an empty string to the variable last_name (line 1). We call last_name  default parameter, and we specify the default value in its description in the docstrings (line 11).
 
 If no value is provided for `last_name`, it defaults to an empty string. This makes the function more flexible.
+
+<!-- SUBSECTION -->
 
 ### **Prefix and/or first name missing**
 
@@ -4406,6 +4457,8 @@ In addition, functions allow us to break down complex problems into smaller, man
 
 ---
 
+<!-- SUBSECTION -->
+
 ## Function outputs and modular design
 
 In the previous Chapter, we learned about functions and their inputs. In this Chapter, we will dive into function outputs. In addition, we’ll take a look at designing and organizing multiple functions in a larger project. Let’s tackle all this by solving the following task.
@@ -4495,6 +4548,8 @@ As is now clear, `return` is the keyword we use to transfer output variables fro
 
 Finally, let’s have a look at the documentation of the function in cell 1. As you can see, we specify the returned variables (lines 11–14). The syntax is the same as for the Parameters (lines 4–9). First, we write `Returns` as a title (line 11), followed by a series of minus signs that act as an underline (line 12). Then, for each returned variable—in this example, there is only one—we write (1) variable name (e.g., `username`), (2) space, (3) colon, (4) space, and (5) type (e.g., `string`) (line 13). On the following line, indented, we write the definition of the returned variable (line 14).
 
+<!-- SUBSECTION -->
+
 ### Creating a password
 We need to implement a function that creates a password composed of four integers.
 
@@ -4549,6 +4604,8 @@ Output:
 ```
 
 To generate a password with four integers, we’ll use a simple trick: we create a random number between `1000` and `9999`, which is the range of all the existing numbers with four digits! Then, we transform the obtained number into a string—using the built-in function `str()`—and we assign the result to the variable `password` (cell 4, line 13). Why are we converting the four-digit integer into a string? Because a password does not have any numerical meaning—that is, we do not use it in arithmetic operations such as addition or multiplication. Finally, we return `password` at line 16. Note that this function does not have any inputs. Thus, there are no parameters in between the round brackets in the header (line 3), there is no Parameters session in the documentation (lines 4–10), and we do not write any arguments in between the round brackets when we call the function (cells 5 and 6, line 1). The returned variable `password` (cell 4, line 16) is saved as `password_1` and `password_2`, at line 1 of cells 5 and 6, respectively. Finally, we print the passwords to check for correctness (cells 5 and 6, line 2).
+
+<!-- SUBSECTION -->
 
 ### Creating a database
 
@@ -4686,6 +4743,8 @@ In some coding examples outside this book, you may find that the main function i
 - A project is often composed of a main function and some satellite functions. The main function executes the solution to the whole task, whereas each satellite function executes one specific subtask.
 
 ---
+
+<!-- SUBSECTION -->
 
 ## Input Validation and Output Variations
 
@@ -4953,6 +5012,8 @@ Mrs. Choi, you are not eligible for a free museum ticket because you are 38
 
 In both cells, the inputs pass the type and value checks, thus the function executes the code and returns a message according to age. In the first case (cell 8), the age is 66 (line 2)—which is greater than 65—so the visitor is eligible for a free ticket. In the second case (cell 9), the age is 38 (line 2)—which is less than 65—so the visitor is not eligible for a free ticket.
 
+<!-- SUBSECTION -->
+
 ### **Recap**
 
 - Definitions
@@ -4975,6 +5036,8 @@ In both cells, the inputs pass the type and value checks, thus the function exec
 - In docstrings, it is possible to write an example after the function definition to enhance clarity.
 
 ---
+
+<!-- SUBSECTION -->
 
 ## **Recursive Functions**
 
