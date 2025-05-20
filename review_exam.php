@@ -1,7 +1,4 @@
 <?php
-ob_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 session_start();
 //Check if user is logged in
@@ -119,10 +116,9 @@ if ($result->num_rows === 0) {
 
 $stmt->close();
 $conn->close();
-ob_end_flush();
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -160,7 +156,7 @@ ob_end_flush();
     <div class="exam-container">
         <h1>Exam Review</h1>
         <h2><?php echo htmlspecialchars($subject); ?><br></h2> <!-- Added <br> for a new line -->
-        <table border="1" style="border-spacing: 1; padding: 20px; width: 100%;">
+        <table style="border-spacing: 1; padding: 20px; width: 100%;">
             <thead>
                 <tr>
                     <th>Question</th>
@@ -207,16 +203,32 @@ ob_end_flush();
         </table>
         <?php //TODO: Check if code was marked correct
                         if (!empty($question['submitted_code']) && str_contains($subject, "Python Level")) {
+                            $q = htmlspecialchars($question['code_question'], ENT_QUOTES);
+                            //$_SESSION['codingQuestion'] = str_replace(["\n", "\r", "'"], ['', '', ''], $q);
                             $correct="";
+                            $aiPrompt="";
                             if($question['code_correct'] === 1){
-                                $correct="  Correct ✔️";
+                                $correct="Correct ✔️";
                             }
-                            else $correct=" Incorrect ❌";
+                            else{
+                                $correct="Incorrect ❌";
+                            }
                             echo '<div class="code-submission-box">';
+                            echo '<h4>Question:</h4>';
+                            echo '<pre>'.$_SESSION['codingQuestion'].'</pre>';
+                            echo '<b> </b>';
                             echo '<h4>Submitted Code:</h4>';
                             echo '<pre>' . htmlspecialchars($question['submitted_code']) . '</pre>';
                             echo '<b> </b>';
-                            echo '<h2>' . $correct . '</h2>';
+                            echo '<h3>' . $correct . '</h3>';
+                            echo '<b> </b>';
+                            ?>
+                            
+                            <?php if($question['code_correct']===0): ?>
+                            <?php echo '<button onclick="chatHelpCode('.json_encode($q).')">Get AI Help💬</button>' ?>
+                            <?php endif; ?>
+                            
+                            <?php
                             echo '</div>';
                          }
                     ?>
@@ -263,6 +275,33 @@ ob_end_flush();
         })
     .catch(error => console.error("Fetch error:", error));
     }
+    
+    function chatHelpCode(question) {
+        let chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display = "flex";
+        console.log(question);
+        let userInput = "I need help with a question. The question asked me: " + question + "Can you please briefly explain the correct answer? Just answer the question as best you can without asking for more details.";
+        if (!userInput.trim()) return;
+        let messages = document.getElementById("chat-messages");
+        //messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+        // Send user message to backend
+        fetch("chat.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userInput })
+        })
+        .then(response => response.json())
+    .then(data => {
+    if (data.reply) {
+        console.log("AI Teacher:", data.reply);
+        document.querySelector("#chat-messages").innerHTML += `<p>\n<strong>AI Teacher: </strong>${data.reply}</p>`;
+    } else {
+        console.error("Error:", data.error || "Unknown error occurred.");
+    }
+        })
+    .catch(error => console.error("Fetch error:", error));
+    }
+
     function sendMessage() {
         let userInput = document.getElementById("user-input").value;
         if (!userInput.trim()) return;
