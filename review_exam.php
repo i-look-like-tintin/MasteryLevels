@@ -254,7 +254,7 @@ $conn->close();
     function chatHelp(question, wrongAnswer, correctAnswer) {
         let chatWindow = document.getElementById("chat-window");
         chatWindow.style.display = "flex";
-        let userInput = "I need help with a question. The question asked me: " + question + " I selected '" + wrongAnswer + "' as my answer, but the correct answer was instead '" + correctAnswer + "'. Can you please briefly explain the correct answer?";
+        let userInput = "I need help with a question. The question asked me: " + question + " I selected '" + wrongAnswer + "' as my answer, but the correct answer was instead '" + correctAnswer + "'. Can you please briefly explain the correct answer? Please also briefly include an example.";
         if (!userInput.trim()) return;
         let messages = document.getElementById("chat-messages");
         //messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
