@@ -1,5 +1,5 @@
 # IT-Project-1
-Current Version 3.4.6
+Current Version 3.4.7
 
 (.env file necessary for AI Chat
 is stored in MS Teams only)
