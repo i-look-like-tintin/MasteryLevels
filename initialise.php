@@ -19,19 +19,23 @@ if ($conn->connect_error) {
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 $conn->query($sql);
 
-$tableCount = $conn->query("SELECT COUNT(*) > 0 AS has_tables
+$tableCountResult = $conn->query("SELECT COUNT(*) > 0 AS has_tables
 FROM information_schema.tables
 WHERE table_schema = '$dbName';");
 
-if ($tableCount === 0) {
+$hasTables = false;
+if($tableCountResult){
+    $row = $tableCountResult->fetch_assoc();
+    $hasTables = (bool)$row['has_tables'];
+}
+
+if (!$hasTables) {
 
 // Select the database
 $conn->select_db($dbname);
-
-//TODO: THIS IS ONLY HERE FOR TESTING. IT DELETES THE ENTIRE DATABASE IF SESSION COOKIE NOT SET. IT SHOULD BE REMOVED EVENTUALLY
 $sqlTemp = "DROP DATABASE exam_website";
 $conn->query($sqlTemp);
-echo "<script>console.error('DATABASE DESTROYED');</script>";
+
 
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
@@ -777,7 +781,19 @@ if ($conn->query($insertPythonAnswers) === FALSE) {
     die("Error creating quizzes table: " . htmlspecialchars($conn->error));
 }
 
-
+$createCodeSubmissionsTable = "CREATE TABLE IF NOT EXISTS code_submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT UNSIGNED,
+    subject VARCHAR(255) NOT NULL,
+    code TEXT NOT NULL,
+    question VARCHAR(255),
+    correct TINYINT(1),
+    submission_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);";
+if ($conn->query($createCodeSubmissionsTable) === FALSE) {
+    die("Error creating code submissions table: " . htmlspecialchars($conn->error));
+}
 
 $conn->close();
 
@@ -788,6 +804,7 @@ $conn->close();
     
 }
 else{
+    echo "<script>console.log('Tables found, not resetting...');</script>";
     $conn->close();
 
     $_SESSION['initialised'] = true;

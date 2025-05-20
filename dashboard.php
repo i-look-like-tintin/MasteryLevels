@@ -106,8 +106,13 @@ $conn->close();
             background-color: #f4f7fc;
             color: #333;
         }
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f4f7fc;
+        }
         .dashboard-header {
-            background-color:rgb(165, 216, 255);
+            background-color: #4A90E2;
             color: #fff;
             padding: 20px 30px;
             display: flex;
@@ -163,7 +168,7 @@ $conn->close();
         }
 
         .mode-toggle-btn {
-            background-color:rgb(165, 216, 255);
+            background-color: #4A90E2;
             border: none;
             padding: 8px 16px;
             color: #fff;
@@ -173,7 +178,7 @@ $conn->close();
         }
 
         .mode-toggle-btn:hover {
-            background-color:rgb(165, 216, 255);
+            background-color: #3b78b7;
         }
         /* Dashboard Content */
         .dashboard-content {
@@ -188,7 +193,7 @@ $conn->close();
         }
         .dashboard-intro,
         .performance-section {
-            background-color:#CBA6F7;
+            background-color: #d6b0d6;
             border-radius: 8px;
             padding: 30px 25px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -211,7 +216,7 @@ $conn->close();
             text-align: center;
         }
         .results-table th, .user-table th {
-            background-color:#4A90E2;
+            background-color: #ed8aed;
             color: #333;
         }
 
@@ -223,7 +228,7 @@ $conn->close();
         }
         .progress-bar-fill {
             height: 20px;
-            background-color:rgb(165, 216, 255);
+            background-color: #4A90E2;
             border-radius: 25px;
             text-align: center;
             color: white;
@@ -252,6 +257,8 @@ $conn->close();
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                 <button type="submit" name="logout" class="logout-btn">Logout</button>
             </form>
+            <!-- Light/Dark Mode Toggle -->
+            <button class="mode-toggle-btn" id="mode-toggle-btn">Light/Dark</button>
         </div>
     </header>
 
@@ -333,5 +340,13 @@ $conn->close();
             </table>
         </section>
     </div>
+
+    <script>
+        // Toggle light/dark mode
+        document.getElementById("mode-toggle-btn").addEventListener("click", function() {
+            document.body.classList.toggle("dark-mode");
+            document.body.classList.toggle("light-mode");
+        });
+    </script>
 </body>
 </html>

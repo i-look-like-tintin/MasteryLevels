@@ -285,7 +285,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 
             <h2 class="question-text">Python Coding Question:</h2>
-            <p class="instructions">Write Python code that asks the user's name and prints the result.</p>
+            <p id = "code_question" class="instructions">Write Python code that asks the user's name and prints the result.</p>
             <div class="code-editor-wrapper">
             <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
@@ -360,7 +360,7 @@ input.addEventListener("input", () => {
             return true;
         } else {
             resultField.value = 0;
-            return false;
+            return true;
         }
         Sk.configure({
             output: function (text) {
@@ -386,7 +386,13 @@ input.addEventListener("input", () => {
             <button type="submit" class="submit-button">Submit Test</button>
 
         </div>
-
+    <script>
+document.querySelector("form").addEventListener("submit", function () {
+    const questionText = document.getElementById("code_question").innerText.trim();
+    document.getElementById("hidden_code_question").value = questionText;
+});
+</script>
+    <input type="hidden" name="code_question" id="hidden_code_question" />
     </form>
 </div>
             <div id="output" hidden>Output</div>
