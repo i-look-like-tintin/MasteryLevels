@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 
@@ -40,9 +41,9 @@ $questionQuery = "
     SELECT q.questionID, q.question 
     FROM Questions q
     INNER JOIN Levels l ON q.levelID = l.levelID
-    WHERE l.levelID > 4 AND l.levelID <= 8
+    WHERE l.levelID <= 4
     ORDER BY RAND()
-    LIMIT 3;
+    LIMIT 3
 ";
 
 $questionResult = $conn->query($questionQuery);
@@ -72,6 +73,7 @@ while ($row = $questionResult->fetch_assoc()) {
   	<script src="https://cdn.jsdelivr.net/gh/Tezumie/Skulpt-CDN@latest/skulpt-stdlib.js"></script>
     <script>hljs.highlightAll();</script>
     <style>
+        /* Extra Clean Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9f9f9;
@@ -182,7 +184,7 @@ while ($row = $questionResult->fetch_assoc()) {
     background: #1e1e1e;
 }
 #language-python {
-    pointer-events: none;     
+    pointer-events: none;      /* prevent interaction */
     position: absolute;
     top: 0;
     left: 0;
@@ -203,7 +205,7 @@ while ($row = $questionResult->fetch_assoc()) {
     border: none;
     resize: none;
     overflow: auto;
-    caret-color: #ffffff; 
+    caret-color: #ffffff; /* make cursor visible */
     font-family: 'Fira Code', monospace;
     font-size: 1rem;
     line-height: 1.4;
@@ -231,7 +233,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <body>
 
 <div class="main-content">
-    <h1 class="page-title">Python Level 2 Test</h1>
+    <h1 class="page-title">Python Level 1 Test</h1>
 
     <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
     <input type="hidden" name="subject" value="Python Level 2">
@@ -283,7 +285,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 
             <h2 class="question-text">Python Coding Question:</h2>
-            <p class="instructions">Given this list of Canberra Universities, write Python code that will print a slice of the list containing only ANU.</p>
+            <p id = "code_question" class="instructions">Given this list of Canberra Universities, write Python code that will print a slice of the list containing only ANU.</p>
             <div class="code-editor-wrapper">
             <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
@@ -329,8 +331,8 @@ input.addEventListener("input", () => {
 </script>
 
 <script type="text/javascript"> 
-    document.getElementById("codeEditor").innerHTML="universities=['UoC','ANU','ADFA']";
-    function highlightPreset(){
+document.getElementById("codeEditor").innerHTML="universities=['UoC','ANU','ADFA']";
+function highlightPreset(){
         const input = document.getElementById("codeEditor");
         const mirror = document.getElementById("codeMirror");
         // Copy and escape content
@@ -363,7 +365,7 @@ input.addEventListener("input", () => {
         }
         else{
             resultField.value=0;
-            return false;
+            return true;
         }
     }
         function validateCode(){
@@ -381,7 +383,7 @@ input.addEventListener("input", () => {
             .catch((err) => {
                 outputElement.innerHTML += `<br><span style="color: red;">${err.toString()}</span>`;
             });
-    }        
+    }              
 </script>
         </div>
 
@@ -389,7 +391,13 @@ input.addEventListener("input", () => {
             <button type="submit" class="submit-button">Submit Test</button>
 
         </div>
-
+    <script>
+document.querySelector("form").addEventListener("submit", function () {
+    const questionText = document.getElementById("code_question").innerText.trim();
+    document.getElementById("hidden_code_question").value = questionText;
+});
+</script>
+    <input type="hidden" name="code_question" id="hidden_code_question" />
     </form>
 </div>
             <div id="output" hidden>Output</div>
