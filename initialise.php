@@ -18,15 +18,20 @@ if ($conn->connect_error) {
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 $conn->query($sql);
-
-$tableCountResult = $conn->query("SELECT COUNT(*) > 0 AS has_tables
-FROM information_schema.tables
-WHERE table_schema = '$dbName';");
+$conn->select_db('information_schema');
+$tableCountResult = $conn->query("
+    SELECT COUNT(*) AS table_count
+    FROM information_schema.tables
+    WHERE table_schema = 'exam_website'
+");
 
 $hasTables = false;
-if($tableCountResult){
-    $row = $tableCountResult->fetch_assoc();
-    $hasTables = (bool)$row['has_tables'];
+
+if ($tableCountResult && $row = $tableCountResult->fetch_assoc()) {
+    $hasTables = $row['table_count'] > 0;
+    echo "<script>console.log('Table count = " . $row['table_count'] . "');</script>";
+} else {
+    echo "<script>console.log('Failed to retrieve table count');</script>";
 }
 
 if (!$hasTables) {
