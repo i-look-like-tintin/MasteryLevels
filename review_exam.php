@@ -215,17 +215,28 @@ $conn->close();
                             }
                             echo '<div class="code-submission-box">';
                             echo '<h4>Question:</h4>';
-                            echo '<pre>'.$_SESSION['codingQuestion'].'</pre>';
+                            echo '<pre id="codeQuestion">'.$q.'</pre>';
                             echo '<b> </b>';
                             echo '<h4>Submitted Code:</h4>';
-                            echo '<pre>' . htmlspecialchars($question['submitted_code']) . '</pre>';
+                            echo '<pre id="usrCode">' . htmlspecialchars($question['submitted_code']) . '</pre>';
                             echo '<b> </b>';
                             echo '<h3>' . $correct . '</h3>';
-                            echo '<b> </b>';
                             ?>
-                            
-                            <?php if($question['code_correct']===0): ?>
-                            <?php echo '<button onclick="chatHelpCode('.json_encode($q).')">Get AI Help💬</button>' ?>
+                            <?php if($question['code_correct'] === 0): ?>
+                            <script>
+                            const text = document.getElementById("codeQuestion").innerText;
+                            const usCode = document.getElementById("usrCode").innerText;
+                            const helpButton = document.createElement("button");
+                            helpButton.style.display = "block";
+                            helpButton.style.margin = "20px auto";
+                            helpButton.textContent = "Get AI Help💬";
+                            helpButton.onclick = function() {
+                            chatHelpCode(text, usCode);
+                            };
+
+                            // Append the button to a known container (like the code box)
+                            document.querySelector(".code-submission-box").appendChild(helpButton);
+                            </script>
                             <?php endif; ?>
                             
                             <?php
@@ -276,11 +287,13 @@ $conn->close();
     .catch(error => console.error("Fetch error:", error));
     }
     
-    function chatHelpCode(question) {
+    function chatHelpCode(question, myCode) {
         let chatWindow = document.getElementById("chat-window");
         chatWindow.style.display = "flex";
         console.log(question);
-        let userInput = "I need help with a question. The question asked me: " + question + "Can you please briefly explain the correct answer? Just answer the question as best you can without asking for more details.";
+        console.log(myCode);
+        let userInput = "I need help with a question. The question asked me: " + question + " I tried to solve this with the code: " + myCode + " but was marked incorrect. Can you please briefly explain the correct answer, and provide guidance as to why I was wrong?";
+        console.log(userInput);
         if (!userInput.trim()) return;
         let messages = document.getElementById("chat-messages");
         //messages.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
