@@ -39,17 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Hash the password before storing it in the database
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Prepare and execute the insert statement
-        $insertUser = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'student')");
-        $insertUser->bind_param('ss', $email, $hashedPassword);
+// Check if the email already exists
+$checkEmail = $conn->prepare("SELECT id FROM users WHERE email = ?");
+$checkEmail->bind_param('s', $email);
+$checkEmail->execute();
+$checkEmail->store_result();
 
-        if ($insertUser->execute()) {
-            // Redirect to login page after successful registration
-            header("Location: login.php");
-            exit();
-        } else {
-            echo "Error: " . $insertUser->error;
-        }
+if ($checkEmail->num_rows > 0) {
+    $error = "An account with this email already exists.";
+} else {
+    // Insert new user
+    $insertUser = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'student')");
+    $insertUser->bind_param('ss', $email, $hashedPassword);
+
+    if ($insertUser->execute()) {
+        header("Location: login.php");
+        exit();
+    } else {
+        $error = "Error: " . $conn->error;
+    }
+}
     }
 }
 
