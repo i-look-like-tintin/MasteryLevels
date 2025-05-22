@@ -41,7 +41,7 @@ $questionQuery = "
     SELECT q.questionID, q.question 
     FROM Questions q
     INNER JOIN Levels l ON q.levelID = l.levelID
-    WHERE l.levelID > 4 AND l.levelID <= 8
+    WHERE l.levelID > 8 AND l.levelID <= 12
     ORDER BY RAND()
     LIMIT 3;
 ";
@@ -64,7 +64,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Python Level 2 Test</title>
+    <title>Python Level 3 Test</title>
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -233,10 +233,10 @@ while ($row = $questionResult->fetch_assoc()) {
 <body>
 
 <div class="main-content">
-    <h1 class="page-title">Python Level 2 Test</h1>
+    <h1 class="page-title">Python Level 3 Test</h1>
 
     <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
-    <input type="hidden" name="subject" value="Python Level 2">
+    <input type="hidden" name="subject" value="Python Level 3">
     <div style="text-align: right; margin-bottom: 20px;">
     <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
 </div>
@@ -285,7 +285,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <iframe src="https://trinket.io/embed/python/30d1b8ad2c9f" width="100%" height="300" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
 
             <h2 class="question-text">Python Coding Question:</h2>
-            <p id = "code_question" class="instructions">Given this list of Canberra Universities, write Python code that will print a slice of the list containing only ANU.</p>
+            <p id = "code_question" class="instructions">Use a for loop to print a 3, 2, 1, blast off countdown. A list has been created for you for this purpose. </p>
             <div class="code-editor-wrapper">
             <textarea name="code_answer" class="code-textarea" id="codeEditor"
             placeholder="Use the IDE above to test and develop your code..." 
@@ -331,7 +331,7 @@ input.addEventListener("input", () => {
 </script>
 
 <script type="text/javascript"> 
-document.getElementById("codeEditor").innerHTML="universities=['UoC','ANU','ADFA']";
+document.getElementById("codeEditor").innerHTML="countdown=[3, 2, 1, 'Blast Off!']";
 function highlightPreset(){
         const input = document.getElementById("codeEditor");
         const mirror = document.getElementById("codeMirror");
@@ -354,36 +354,52 @@ function highlightPreset(){
 }
 
     function runSkulptCode() {
-        const code = document.getElementById("codeEditor").value;
-        const outputElement = document.getElementById("output");
-        const resultField = document.getElementById("code_correct");
-        outputElement.innerHTML = ""; // Clear previous output
-        validateCode();
-        if (outputElement.innerHTML === "['ANU']"){
-            resultField.value = 1;
-            return true;
+     const userCode = document.getElementById("codeEditor").value;
+    let outputLines = [];
+
+    // Basic structural checks (not strict, just signal intent)
+    const hasForLoop = /\bfor\b.+\b(in|range)\b/.test(userCode);
+    const printsSomething = /print\s*\(.+\)/.test(userCode);
+
+    Sk.configure({
+        output: function(text) {
+            const trimmed = text.trim();
+            if (trimmed !== "") outputLines.push(trimmed);
+        },
+        read: function(x) {
+            if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+                throw "File not found: '" + x + "'";
+            return Sk.builtinFiles["files"][x];
         }
-        else{
-            resultField.value=0;
-            return true;
-        }
-    }
-        function validateCode(){
-            Sk.configure({
-                output: function (text) {
-                    outputElement.innerHTML += text.replace(/\n/g, "<br>");
-                },
-                read: builtinRead,
-                inputfun: function (promptText) {
-                    return window.prompt(promptText); // Simple browser prompt
-                },
-                inputfunTakesPrompt: true
-            });
-        Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
-            .catch((err) => {
-                outputElement.innerHTML += `<br><span style="color: red;">${err.toString()}</span>`;
-            });
-    }              
+    });
+
+    Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, userCode))
+        .then(() => {
+            const matchBlastOff = /^blast\s+off!?[!]*$/i;
+            const validOutput =
+                outputLines.length === 4 &&
+                outputLines[0] === "3" &&
+                outputLines[1] === "2" &&
+                outputLines[2] === "1" &&
+                matchBlastOff.test(outputLines[3]);
+
+            if (hasForLoop && printsSomething && validOutput) {
+                alert("✅ Countdown recognized! Nice work.");
+                document.getElementById("code_correct").value = 1;
+                return true;
+            } else {
+                alert("❌ Output does not match expected countdown (3, 2, 1, blast off).");
+                document.getElementById("code_correct").value = 0;
+                return true;
+            }
+        })
+        .catch(err => {
+            alert("❌ Error running code:\n" + err.toString());
+            document.getElementById("code_correct").value = 0;
+        });
+
+    return false;
+}
 </script>
         </div>
 
