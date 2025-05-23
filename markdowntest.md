@@ -5160,4 +5160,7 @@ Let’s conclude with some advantages and disadvantages of recursive functions. 
 - Iterative functions contain a loop to repeat some code.
 - Recursive functions call themselves to repeat some code.
 - Recursive functions typically contain an if/else construct, where one statement is the base case, and the other is the recursive case.
+
 - Recursive functions contain compact code and are appropriate for intrinsically recursive problems. However, they use a large amount of computational memory and can be harder to debug.
+<!-- END section8 -->
+
