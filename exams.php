@@ -146,6 +146,11 @@ $conn->close();
             background-color: #1f1f1f;
         }
 
+        body.dark-mode .dashboard-header {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
         body.dark-mode .progress-table th {
             background-color: #333;
             color: #e0e0e0;
@@ -164,6 +169,14 @@ $conn->close();
         body.dark-mode .pending {
             background-color: #f44336;
             color: #fff;
+        }
+
+        body.dark-mode .logout-btn {
+            background-color: #d32f2f;
+        }
+
+        body.dark-mode .logout-btn:hover {
+            background-color: #b71c1c;
         }
 
         body.dark-mode .level-btn {
@@ -188,7 +201,22 @@ $conn->close();
             padding: 0;
         }
 
-        /*.dashboard-content {
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--header-bg);
+            color: var(--header-text-color);
+        }
+
+        .dashboard-header a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px;
+        }
+
+        .dashboard-content {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -198,14 +226,14 @@ $conn->close();
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
-        } */
+        }
 
-        /*.dashboard-section {
+        .dashboard-section {
             margin-bottom: 40px;
             width: 100%;
             max-width: 800px;
             text-align: center;
-        }*/
+        }
 
         .level-btn {
             background-color: var(--button-bg);
@@ -256,6 +284,39 @@ $conn->close();
             background-color: var(--pending-bg);
             color: var(--pending-text-color);
         }
+
+        /* Logout Button Style */
+        .logout-btn {
+            background-color: var(--logout-bg);
+            border: none;
+            padding: 8px 16px;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--logout-hover-bg);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ccc;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 50%;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: #aaa;
+        }
+
     </style>
     <script>
         // Check if user has a saved theme preference
@@ -278,16 +339,30 @@ $conn->close();
             // Save user preference in localStorage
             localStorage.setItem('theme', newTheme);
         }
-
-        // Toggle navigation menu for mobile view
-        function toggleNav() {
-            var nav = document.getElementById("dashboardNav");
-            nav.classList.toggle("responsive");
-        }
     </script>
 </head>
 <body class="dashboard">
-<?php include 'navbar.php'; ?>
+    <!-- Header Section -->
+    <header class="dashboard-header">
+        <div class="logo">
+            <h1>MasteryLevels</h1>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="dashboard.php">Dashboard</a></li>
+                <li><a href="python_splash.php">Learn Python</a></li>
+                <li><a href="exams.php">Exams</a></li>
+                <li><a href="progress.php">Progress</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                <button type="submit" name="logout" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </header>
+
     <!-- Main Content -->
     <div class="dashboard-content">
         <!-- Theme Toggle Button -->
@@ -333,16 +408,5 @@ $conn->close();
             </table>
         </section>
     </div>
-<script>
-function adjustDashboardPadding() {
-    var header = document.querySelector('.dashboard-header');
-    var content = document.querySelector('.dashboard-content');
-    if (header && content) {
-        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
-    }
-}
-window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
-window.addEventListener('resize', adjustDashboardPadding);
-</script>
 </body>
 </html>

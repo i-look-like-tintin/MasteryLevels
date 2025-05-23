@@ -359,7 +359,7 @@ $conn->close();
             max-width: 800px;
             margin: 50px auto;
             background-color: #fff;
-            padding: 60px 30px 30px 30px; /* Increased top padding */
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
