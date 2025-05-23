@@ -152,70 +152,17 @@ $conn->close();
             margin: 0;
             padding: 0;
         }
-        /* Header */
-        .dashboard-header {
-            background-color: #4A90E2;
-            color: #fff;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dashboard-header .logo h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-        .dashboard-nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .dashboard-nav ul li {
-            margin-left: 25px;
-        }
-        .dashboard-nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-        .dashboard-nav ul li a:hover {
-            color: #d1e9ff;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-        }
-        .user-info span {
-            margin-right: 15px;
-        }
-        .logout-btn {
-            background-color: #FF5C5C;
-            border: none;
-            padding: 8px 16px;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .logout-btn:hover {
-            background-color: #FF1E1E;
-        }
-        /* Dashboard Content */
-        .dashboard-content {
-            padding: 40px 50px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
         /* Manage Quizzes Section */
         .manage-section {
             background-color: #fff;
             border-radius: 8px;
             padding: 30px 25px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto; /* Add this line */
         }
         .manage-section h2 {
             margin-top: 0;
@@ -268,6 +215,8 @@ $conn->close();
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            min-width: 900px; /* Set a min-width so it scrolls on small screens */
+            box-sizing: border-box;
         }
         .quizzes-table th, .quizzes-table td {
             padding: 12px;
@@ -316,30 +265,27 @@ $conn->close();
                 margin-top: 10px;
             }
         }
+        @media (max-width: 1100px) {
+            .manage-section {
+                max-width: 100vw;
+                padding: 20px 5px;
+            }
+            .quizzes-table {
+                min-width: 700px;
+                font-size: 14px;
+            }
+        }
+        /* Scrollable Table Container */
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body class="dashboard">
-    <header class="dashboard-header">
-        <div class="logo">
-            <h1>MasteryLevels - Manage Quizzes</h1>
-        </div>
-        <nav class="dashboard-nav">
-            <ul>
-                <li><a href="teacher_dashboard.php">Dashboard</a></li>
-                <li><a href="manage_students.php">Manage Students</a></li>
-                <li><a href="manage_quizzes.php">Manage Quizzes</a></li>
-                <li><a href="reports.php">Reports</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">
-            <span>Hi, <?php echo htmlspecialchars($_SESSION['user']); ?></span>
-            <form method="POST" style="display: inline;">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                <button type="submit" name="logout" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </header>
-
+     <?php include 'teacher_navbar.php'; ?>
     <div class="dashboard-content">
         <!-- Manage Quizzes Section -->
         <section class="manage-section">
@@ -399,49 +345,62 @@ $conn->close();
 
             <h2>Existing Quizzes</h2>
             <?php if ($quizzesResult->num_rows > 0): ?>
-                <table class="quizzes-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Subject</th>
-                            <th>Level</th>
-                            <th>Question</th>
-                            <th>Option A</th>
-                            <th>Option B</th>
-                            <th>Option C</th>
-                            <th>Option D</th>
-                            <th>Correct Option</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($quiz = $quizzesResult->fetch_assoc()): ?>
+                <div class="table-scroll">
+                    <table class="quizzes-table">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($quiz['id']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['subject']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['level']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['question']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['option_a']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['option_b']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['option_c']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['option_d']); ?></td>
-                                <td><?php echo htmlspecialchars($quiz['correct_option']); ?></td>
-                                <td>
-                                    <!-- Optional: Add Edit functionality here -->
-                                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this quiz?');" style="display: inline;">
-                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                                        <input type="hidden" name="quiz_id" value="<?php echo htmlspecialchars($quiz['id']); ?>">
-                                        <button type="submit" name="delete_quiz" class="delete-btn">Delete</button>
-                                    </form>
-                                </td>
+                                <th>ID</th>
+                                <th>Subject</th>
+                                <th>Level</th>
+                                <th>Question</th>
+                                <th>Option A</th>
+                                <th>Option B</th>
+                                <th>Option C</th>
+                                <th>Option D</th>
+                                <th>Correct Option</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php while ($quiz = $quizzesResult->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($quiz['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['subject']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['level']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['question']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['option_a']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['option_b']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['option_c']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['option_d']); ?></td>
+                                    <td><?php echo htmlspecialchars($quiz['correct_option']); ?></td>
+                                    <td>
+                                        <!-- Optional: Add Edit functionality here -->
+                                        <form method="POST" onsubmit="return confirm('Are you sure you want to delete this quiz?');" style="display: inline;">
+                                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                                            <input type="hidden" name="quiz_id" value="<?php echo htmlspecialchars($quiz['id']); ?>">
+                                            <button type="submit" name="delete_quiz" class="delete-btn">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php else: ?>
                 <p>No quizzes found.</p>
             <?php endif; ?>
         </section>
     </div>
+    <script>
+function adjustDashboardPadding() {
+    var header = document.querySelector('.dashboard-header');
+    var content = document.querySelector('.dashboard-content');
+    if (header && content) {
+        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
+    }
+}
+window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
+window.addEventListener('resize', adjustDashboardPadding);
+</script>
 </body>
 </html>

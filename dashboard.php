@@ -90,7 +90,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasteryLevels - Exam Dashboard</title>
+    <!--<title>MasteryLevels - Exam Dashboard</title>  does not show -->
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Base Styles */
@@ -106,91 +106,22 @@ $conn->close();
             background-color: #f4f7fc;
             color: #333;
         }
-        .dashboard-header {
-            background-color:rgb(165, 216, 255);
-            color: #fff;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-        .dashboard-header .logo h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-        .dashboard-nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .dashboard-nav ul li {
-            margin-left: 25px;
-        }
-        .dashboard-nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-        .dashboard-nav ul li a:hover {
-            color: #d1e9ff;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-        }
-        .user-info span {
-            margin-right: 15px;
-        }
-        .logout-btn {
-            background-color: #FF5C5C;
-            border: none;
-            padding: 8px 16px;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .logout-btn:hover {
-            background-color: #FF1E1E;
-        }
-
-        .mode-toggle-btn {
-            background-color:rgb(165, 216, 255);
-            border: none;
-            padding: 8px 16px;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .mode-toggle-btn:hover {
-            background-color:rgb(165, 216, 255);
-        }
         /* Dashboard Content */
-        .dashboard-content {
+        /*.dashboard-content {
             padding: 40px 50px;
             display: flex;
             flex-direction: column;
             gap: 30px;
-        }
-        .dashboard-sections {
+        }*/
+        /*.dashboard-sections {
             display: flex;
             gap: 30px;
-        }
+        }*/
         .dashboard-intro,
         .performance-section {
             background-color:#CBA6F7;
             border-radius: 8px;
-            padding: 30px 25px;
+            padding: 30px 25px 30px 25px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             flex: 1;
             min-width: 300px;
@@ -233,30 +164,9 @@ $conn->close();
     </style>
 </head>
 <body class="dashboard light-mode">
-    <!-- Header Section -->
-    <header class="dashboard-header">
-        <div class="logo">
-            <h1>MasteryLevels</h1>
-        </div>
-        <nav class="dashboard-nav">
-            <ul>
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="python_splash.php">Learn Python</a></li>
-                <li><a href="exams.php">Exams</a></li>
-                <li><a href="progress.php">Progress</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">
-            <span>Hi, <?php echo htmlspecialchars($user); ?></span>
-            <form method="POST" style="display:inline;">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                <button type="submit" name="logout" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </header>
-
+<?php include 'navbar.php'; ?>
     <div class="dashboard-content">
-        <div class="dashboard-sections">
+        <div class="dashboard-overview">
             <!-- Introduction Section -->
             <div class="dashboard-intro">
                 <h2>Welcome back, <?php echo htmlspecialchars($user); ?>!</h2>
@@ -333,5 +243,15 @@ $conn->close();
             </table>
         </section>
     </div>
-</body>
+<script>
+function adjustDashboardPadding() {
+    var header = document.querySelector('.dashboard-header');
+    var content = document.querySelector('.dashboard-content');
+    if (header && content) {
+        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
+    }
+}
+window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
+window.addEventListener('resize', adjustDashboardPadding);
+</script>
 </html>
