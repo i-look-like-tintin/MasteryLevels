@@ -189,7 +189,7 @@ while ($row = $levelsResult->fetch_assoc()) {
     $levels[] = $row;
 }
 
-$levelGroups = array_chunk($levels, 4); // 9 groups
+$levelGroups = array_chunk($levels, 4); // 8 groups
 $canAccessNext = true;
 $groupNumber = 1;
 
