@@ -177,64 +177,6 @@ $conn->close();
             margin: 0;
             padding: 0;
         }
-        /* Header */
-        .dashboard-header {
-            background-color: #4A90E2;
-            color: #fff;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dashboard-header .logo h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-        .dashboard-nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .dashboard-nav ul li {
-            margin-left: 25px;
-        }
-        .dashboard-nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-        .dashboard-nav ul li a:hover {
-            color: #d1e9ff;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-        }
-        .user-info span {
-            margin-right: 15px;
-        }
-        .logout-btn {
-            background-color: #FF5C5C;
-            border: none;
-            padding: 8px 16px;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .logout-btn:hover {
-            background-color: #FF1E1E;
-        }
-        /* Dashboard Content */
-        .dashboard-content {
-            padding: 40px 50px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
         /* Overview Cards */
         .overview-cards {
             display: flex;
@@ -279,6 +221,18 @@ $conn->close();
             color: #333;
             margin-bottom: 20px;
         }
+        /* Flexbox for side-by-side sections */
+        .reports-flex {
+            display: flex;
+            gap: 40px; /* Increased from 20px to 40px */
+        }
+        /* Space between stacked report sections */
+        .report-section {
+            margin-top: 40px; /* Add space above each report section */
+        }
+        .report-section:first-of-type {
+            margin-top: 40px; /* No margin for the first section */
+        }
         /* Responsive Design */
         @media (max-width: 768px) {
             .dashboard-content {
@@ -291,6 +245,16 @@ $conn->close();
                 flex-direction: column;
             }
         }
+        @media (max-width: 1050px) {
+    .reports-flex {
+        flex-direction: column;
+        gap: 40px; /* keep vertical space between sections */
+    }
+    .report-section {
+        min-width: 0;
+        width: 100%;
+    }
+}
         @media (max-width: 480px) {
             .dashboard-header {
                 flex-direction: column;
@@ -311,25 +275,7 @@ $conn->close();
     </style>
 </head>
 <body class="dashboard">
-    <header class="dashboard-header">
-        <div class="logo">
-            <h1>MasteryLevels - Reports</h1>
-        </div>
-        <nav class="dashboard-nav">
-            <ul>
-                <li><a href="teacher_dashboard.php">Dashboard</a></li>
-                <li><a href="manage_students.php">Manage Students</a></li>
-                <li><a href="manage_quizzes.php">Manage Quizzes</a></li>
-                <li><a href="reports.php">Reports</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">
-            <form method="POST" style="display: inline;">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                <button type="submit" name="logout" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </header>
+<?php include 'teacher_navbar.php'; ?>
 
     <div class="dashboard-content">
         <!-- Overview Statistics -->
@@ -364,7 +310,7 @@ $conn->close();
         </section>
 
         <!-- Reports Sections -->
-        <div style="display: flex; gap: 20px;">
+        <div class="reports-flex">
             <!-- Student Performance Chart -->
             <section class="report-section" style="flex: 1;">
                 <h2>Student Average Performance</h2>
@@ -450,5 +396,16 @@ $conn->close();
             }
         });
     </script>
+    <script>
+    function adjustDashboardPadding() {
+    var header = document.querySelector('.dashboard-header');
+    var content = document.querySelector('.dashboard-content');
+    if (header && content) {
+        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
+    }
+    }
+window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
+window.addEventListener('resize', adjustDashboardPadding);
+</script>
 </body>
 </html>

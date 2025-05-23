@@ -68,185 +68,76 @@ $stmt->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Python Levels</title>
     <link rel="stylesheet" href="styles.css"> 
-    <style>
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 50px auto 0 auto; /* <- 50px margin on top */
-    padding-top: 400px;
-}
-
-.levels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-}
-
-.level-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    min-height: 160px;
-    transition: transform 0.2s ease;
-}
-
-.level-card:hover {
-    transform: scale(1.03);
-}
-
-.level-card.level-locked {
-    background: #f0f0f0;
-}
-
-.level-title {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.level-grade {
-    margin-bottom: 20px;
-    font-size: 1em;
-    color: #666;
-}
-
-.level-button {
-    padding: 10px 20px;
-    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.level-button:hover {
-    background: linear-gradient(90deg, rgb(96, 184, 252) 0%, rgb(236, 98, 252) 100%);
-}
-
-.level-button.disabled {
-    background: #9e9e9e;
-    cursor: not-allowed;
-}
-.dashboard-content {
-    padding: clamp(30px, 5vw, 400px)
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-.dashboard-section h1 {
-    margin-bottom: 30px;
-    text-align: center;
-}
-.dashboard-section {
-    margin-top: 0%;
-}
-
-</style>
 
 </head>
 <body>
-<!-- Header Section -->
-<header class="dashboard-header">
-        <div class="logo">
-            <h1>MasteryLevels</h1>
-        </div>
-        <nav class="dashboard-nav">
-            <ul>
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="python_splash.php">Learn Python</a></li>
-                <li><a href="exams.php">Exams</a></li>
-                <li><a href="progress.php">Progress</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">
-            <span>Hi, <?php echo htmlspecialchars($user); ?></span>
-            <form method="POST" style="display:inline;">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                <button type="submit" name="logout" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </header>
+<?php include 'navbar.php'; ?>
 <div class="dashboard-content">
     <div class = "dashboard-section">
     <h1>Welcome to Python Mastery Levels</h1>
+    
 
     <div class="levels-grid">
-<?php
-$levelsQuery = "SELECT levelID, level FROM Levels ORDER BY levelID ASC";
-$levelsResult = $conn->query($levelsQuery);
+        <?php
+        $levelsQuery = "SELECT levelID, level FROM Levels ORDER BY levelID ASC";
+        $levelsResult = $conn->query($levelsQuery);
 
-$levels = [];
-while ($row = $levelsResult->fetch_assoc()) {
-    $levels[] = $row;
-}
+        $levels = [];
+        while ($row = $levelsResult->fetch_assoc()) {
+            $levels[] = $row;
+        }
 
-$levelGroups = array_chunk($levels, 4); // 9 groups
-$canAccessNext = true;
-$groupNumber = 1;
+        $levelGroups = array_chunk($levels, 4); // 6 groups
+        $canAccessNext = true;
+        $groupNumber = 1;
 
-foreach ($levelGroups as $group) {
-    $displayTitle = "Level " . $groupNumber; // Visible button title
+        foreach ($levelGroups as $group) {
+            $displayTitle = "Level " . $groupNumber; // Visible button title
 
-    // NEW: Check result for 'Level 1', 'Level 2', etc
-    $groupResultKey = "Python Level " . $groupNumber;
-    $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] >= 70; //Requires 70% to unlock next level
+            // NEW: Check result for 'Level 1', 'Level 2', etc
+             $groupResultKey = "Python Level " . $groupNumber;
+            $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] == 100;
 
-    $isLocked = false;
-    //TODO: Reset this
-    //$isLocked = !$canAccessNext;
-    echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
-    echo "<h2 class='level-title'>{$displayTitle}</h2>";
-    echo "<p class='level-grade'>" . ($groupComplete ? "Completed with > 70%" : "Not Completed") . "</p>";
+            $isLocked = false;
+            //TODO: Reset this
+            //$isLocked = !$canAccessNext;
+            echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
+            echo "<h2 class='level-title'>{$displayTitle}</h2>";
+            echo "<p class='level-grade'>" . ($groupComplete ? "Completed with 100%" : "Not Completed") . "</p>";
 
-    if (!$isLocked) {
-        echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
-    }
-    elseif ($groupComplete) {
-        echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
-    }
-    else {
-        echo "<button class='level-button disabled' disabled>Locked</button>";
-    }
+            if (!$isLocked) {
+                echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
+            }
+            elseif ($groupComplete) {
+             echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";
+            }
+            else {
+                echo "<button class='level-button disabled' disabled>Locked</button>";
+            }
 
-    echo "</div>";
+            echo "</div>";
 
-    // Only unlock next group if this group test was completed 100%
-    $canAccessNext = $groupComplete;
-    $groupNumber++;
-}
-?>
-
+            // Only unlock next group if this group test was completed 100%
+            $canAccessNext = $groupComplete;
+            $groupNumber++;
+        }
+        ?>
     </div>
     </div>
 </div>
 <script>
-function applyDynamicHeaderPadding() {
-    const header = document.querySelector('.dashboard-header');
-    const content = document.querySelector('.dashboard-content');
-
-    if (!header || !content) return;
-
-    const headerHeight = header.offsetHeight;
-    const paddingTop = headerHeight + 20; // breathing room
-
-        // Set padding-top with !important to override any CSS
-        content.style.setProperty('padding-top', paddingTop + 'px', 'important');
+function adjustDashboardPadding() {
+    var header = document.querySelector('.dashboard-header');
+    var content = document.querySelector('.dashboard-content');
+    if (header && content) {
+        content.style.paddingTop = (header.offsetHeight + 20) + 'px'; // 20px is a small buffer
+    }
 }
-
-// Run once DOM is fully ready
-window.addEventListener('DOMContentLoaded', applyDynamicHeaderPadding);
-
-// Rerun if window resizes or moves between screens
-window.addEventListener('resize', applyDynamicHeaderPadding);
+window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
+window.addEventListener('resize', adjustDashboardPadding);
 </script>
 </body>
 </html>

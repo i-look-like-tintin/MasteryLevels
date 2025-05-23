@@ -4170,7 +4170,8 @@ F-strings (line 8) use the same format, just placed inside the `{}` directly.
     | `.upper()` | Converts all characters in the string to uppercase |
 - There are at least four ways to combine strings and numerical variables when printing: concatenation, comma separation, method `.format()`, and f-strings
 - To round a number to a wanted number of decimals, we can use the built-in function `round()`
-<!-- SUBSECTION -->
+<!-- END section7 -->
+<!-- START section8 -->
 # Part 8. Functions
 
 ---
@@ -5160,4 +5161,3 @@ Let’s conclude with some advantages and disadvantages of recursive functions. 
 - Recursive functions call themselves to repeat some code.
 - Recursive functions typically contain an if/else construct, where one statement is the base case, and the other is the recursive case.
 - Recursive functions contain compact code and are appropriate for intrinsically recursive problems. However, they use a large amount of computational memory and can be harder to debug.
-<!-- END section7 -->

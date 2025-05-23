@@ -36,14 +36,14 @@ $conn->select_db($database);
 
 // --- RANDOM MULTIPLE CHOICE SECTION ---
 
-
+// Fetch 3 random Level 1 questions
 $questionQuery = "
     SELECT q.questionID, q.question 
     FROM Questions q
     INNER JOIN Levels l ON q.levelID = l.levelID
-    WHERE l.levelID > 3 AND l.levelID <= 6
+    WHERE l.levelID <= 4
     ORDER BY RAND()
-    LIMIT 3;
+    LIMIT 3
 ";
 
 $questionResult = $conn->query($questionQuery);
@@ -64,7 +64,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Python Level 2 Test</title>
+    <title>Python Level 1 Test</title>
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -233,7 +233,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <body>
 
 <div class="main-content">
-    <h1 class="page-title">Python Level 2 Test</h1>
+    <h1 class="page-title">Python Level 1 Test</h1>
 
     <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
     <input type="hidden" name="subject" value="Python Level 2">
