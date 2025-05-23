@@ -189,7 +189,7 @@ while ($row = $levelsResult->fetch_assoc()) {
     $levels[] = $row;
 }
 
-$levelGroups = array_chunk($levels, 4); // 6 groups
+$levelGroups = array_chunk($levels, 4); // 9 groups
 $canAccessNext = true;
 $groupNumber = 1;
 
@@ -198,14 +198,14 @@ foreach ($levelGroups as $group) {
 
     // NEW: Check result for 'Level 1', 'Level 2', etc
     $groupResultKey = "Python Level " . $groupNumber;
-    $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] == 100;
+    $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] >= 70; //Requires 70% to unlock next level
 
     $isLocked = false;
     //TODO: Reset this
     //$isLocked = !$canAccessNext;
     echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
     echo "<h2 class='level-title'>{$displayTitle}</h2>";
-    echo "<p class='level-grade'>" . ($groupComplete ? "Completed with 100%" : "Not Completed") . "</p>";
+    echo "<p class='level-grade'>" . ($groupComplete ? "Completed with > 70%" : "Not Completed") . "</p>";
 
     if (!$isLocked) {
         echo "<a href='python_level.php?FzYps43NmreQ=".($groupNumber*5446124)."' class='level-button'>Start Level</a>";

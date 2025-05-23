@@ -40,7 +40,7 @@ $questionQuery = "
     SELECT q.questionID, q.question 
     FROM Questions q
     INNER JOIN Levels l ON q.levelID = l.levelID
-    WHERE l.levelID > 12 AND l.levelID <= 16
+    WHERE l.levelID > 9 AND l.levelID <= 13
     ORDER BY RAND()
     LIMIT 3;
 ";
