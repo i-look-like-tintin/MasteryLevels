@@ -363,7 +363,27 @@ $conn->close();
     </style>
 </head>
 <body class="dashboard">
-    <?php include 'teacher_navbar.php'; ?>
+    <header class="dashboard-header">
+        <div class="logo">
+            <h1>MasteryLevels - Manage Students</h1>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="teacher_dashboard.php">Dashboard</a></li>
+                <li><a href="manage_students.php">Manage Students</a></li>
+                <li><a href="manage_quizzes.php">Manage Quizzes</a></li>
+                <li><a href="reports.php">Reports</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <span>Hi, <?php echo htmlspecialchars($_SESSION['user']); ?></span>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                <button type="submit" name="logout" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </header>
+
     <div class="dashboard-content">
         <!-- Manage Students Section -->
         <section class="manage-section">
@@ -428,16 +448,5 @@ $conn->close();
             <?php endif; ?>
         </section>
     </div>
-<script>
-function adjustDashboardPadding() {
-    var header = document.querySelector('.dashboard-header');
-    var content = document.querySelector('.dashboard-content');
-    if (header && content) {
-        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
-    }
-}
-window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
-window.addEventListener('resize', adjustDashboardPadding);
-</script>
 </body>
 </html>

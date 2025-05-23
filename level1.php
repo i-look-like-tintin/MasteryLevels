@@ -330,8 +330,46 @@ if (!$courses_result) {
             margin: 0;
             padding: 0;
         }
+        .dashboard-header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dashboard-header .logo h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .dashboard-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .dashboard-nav ul li {
+            margin-left: 20px;
+        }
+        .dashboard-nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
         .user-info {
             font-size: 16px;
+        }
+        .logout-btn {
+            background-color: #ff4d4d;
+            border: none;
+            padding: 8px 12px;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .logout-btn:hover {
+            background-color: #ff1a1a;
         }
         .exam-container {
             text-align: center;
@@ -377,7 +415,18 @@ if (!$courses_result) {
         }
         /* Responsive Design */
         @media (max-width: 600px) {
-            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-nav ul li {
+                margin-left: 0;
+                margin-top: 10px;
+            }
             .exam-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -389,8 +438,27 @@ if (!$courses_result) {
     </style>
 </head>
 <body>
-<?php include 'navbar.php'; ?>
-<div class="dashboard-content">
+
+<header class="dashboard-header">
+    <div class="logo">
+        <h1>MasteryLevels</h1>
+    </div>
+    <nav class="dashboard-nav">
+        <ul>
+            <li><a href="dashboard.php">Home</a></li>
+            <li><a href="exams.php">Exams</a></li>
+            <li><a href="progress.php">Progress</a></li>
+        </ul>
+    </nav>
+    <div class="user-info">
+        <span>Hi, <?php echo htmlspecialchars($user); ?></span>
+        <form method="POST" style="display: inline;">
+            <button type="submit" name="logout" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</header>
+
+<div class="exam-container">
     <h1>Select a Level 1 Exam</h1>
     <div class="exam-buttons">
         <?php
@@ -417,16 +485,6 @@ if (!$courses_result) {
         ?>
     </div>
 </div>
-<script>
-    function adjustDashboardPadding() {
-    var header = document.querySelector('.dashboard-header');
-    var content = document.querySelector('.dashboard-content');
-    if (header && content) {
-        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
-    }
-}
-window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
-window.addEventListener('resize', adjustDashboardPadding);
-</script>
+
 </body>
 </html>

@@ -118,12 +118,52 @@ $conn->close();
             margin: 0;
             padding: 0;
         }
-        
-        /*.dashboard-content {
+        .dashboard-header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dashboard-header .logo h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .dashboard-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .dashboard-nav ul li {
+            margin-left: 20px;
+        }
+        .dashboard-nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .user-info {
+            font-size: 16px;
+        }
+        .logout-btn {
+            background-color: #ff4d4d;
+            border: none;
+            padding: 8px 12px;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .logout-btn:hover {
+            background-color: #ff1a1a;
+        }
+        .dashboard-content {
             padding: 50px 20px;
             display: block;
-        }*/
-        /*.dashboard-section {
+        }
+        .dashboard-section {
             background-color: #fff;
             padding: 30px;
             border-radius: 8px;
@@ -134,7 +174,7 @@ $conn->close();
         .dashboard-section h2 {
             margin-top: 0;
             color: #333;
-        } */
+        }
         /* Progress Table Styles */
         .progress-table {
             width: 100%;
@@ -182,6 +222,18 @@ $conn->close();
         }
 
         @media (max-width: 600px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-nav ul li {
+                margin-left: 0;
+                margin-top: 10px;
+            }
             .progress-table th, .progress-table td {
                 padding: 8px;
             }
@@ -192,7 +244,27 @@ $conn->close();
     </style>
 </head>
 <body class="dashboard">
-<?php include 'navbar.php'; ?>
+<header class="dashboard-header">
+    <div class="logo">
+        <h1>MasteryLevels</h1>
+    </div>
+    <nav class="dashboard-nav">
+        <ul>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="python_splash.php">Learn Python</a></li>
+            <li><a href="exams.php">Exams</a></li>
+            <li><a href="progress.php">Progress</a></li>
+        </ul>
+    </nav>
+    <div class="user-info">
+        <span>Hi, <?php echo htmlspecialchars($user); ?></span>
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
+            <button type="submit" name="logout" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</header>
+
 <div class="dashboard-content">
     <!-- Courses Progress Section -->
     <section class="dashboard-section">
@@ -254,16 +326,5 @@ $conn->close();
         </table>
     </section>
 </div>
-<script>
-function adjustDashboardPadding() {
-    var header = document.querySelector('.dashboard-header');
-    var content = document.querySelector('.dashboard-content');
-    if (header && content) {
-        content.style.paddingTop = (header.offsetHeight + 20) + 'px';
-    }
-}
-window.addEventListener('DOMContentLoaded', adjustDashboardPadding);
-window.addEventListener('resize', adjustDashboardPadding);
-</script>
 </body>
 </html>

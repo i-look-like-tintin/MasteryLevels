@@ -128,7 +128,7 @@ echo "<script>console.log('Creating L....');</script>";
 $createPythonQuestions = "CREATE TABLE IF NOT EXISTS Questions (
     questionID INT PRIMARY KEY,
     levelID INT,
-    question VARCHAR(100),
+    question VARCHAR(300),
     FOREIGN KEY (levelID) REFERENCES Levels(levelID)
 );";
 if ($conn->query($createPythonQuestions) === FALSE) {
@@ -136,7 +136,7 @@ if ($conn->query($createPythonQuestions) === FALSE) {
 }
 echo "<script>console.log('Creating Q2....');</script>";
 $createPythonAnswers = "CREATE TABLE IF NOT EXISTS Answers (
-    answerID INT PRIMARY KEY,
+    answerID INT AUTO_INCREMENT PRIMARY KEY,
     questionID INT,
     answer VARCHAR(100),
     answer_character VARCHAR(1), -- e.g., A, B, C, D
@@ -149,7 +149,6 @@ if ($conn->query($createPythonAnswers) === FALSE) {
 }
 echo "<script>console.log('Creating A....');</script>";
 $insertPythonLevels = "-- inserting levels, questions and answers into the tables 
-
 INSERT INTO Levels (levelID, level) VALUES
 -- Part 1 – Strings, “input()“, “print()“ ---------------------------
 ( 1, 'Part 1 “print()“ & literals'),

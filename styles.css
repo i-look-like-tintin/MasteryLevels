@@ -1,20 +1,37 @@
-/* Reset and base styles */
-*,
-*::before,
-*::after {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
 body {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Arial', sans-serif;
     background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
+
+
+.level-btn {
+    background-color: #4A90E2;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.level-btn.disabled {
+    background-color: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
 
 /* Login container */
 .login-container {
@@ -26,8 +43,17 @@ body {
     width: 350px;
     max-width: 90%;
 }
-.login-container h1 { font-size: 24px; margin-bottom: 20px; }
-.login-container form { display: flex; flex-direction: column; }
+
+.login-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
 .login-container input {
     width: 100%;
     padding: 12px;
@@ -36,10 +62,58 @@ body {
     border-radius: 5px;
     font-size: 16px;
 }
-.login-container button { padding: 12px; font-size: 16px; }
-.login-container p { margin-top: 20px; font-size: 14px; }
-.login-container a { color: #007BFF; text-decoration: none; }
-.login-container a:hover { text-decoration: underline; }
+
+/* General button styling with gradient */
+button, .btn, .home-btn, .level-btn, .complete-btn {
+    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* Finish Exam button styling with gradient */
+.fin-btn {
+    background: linear-gradient(90deg, rgb(0, 255, 170) 0%, rgb(159, 245, 1) 100%);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, .btn:hover, .home-btn:hover, .level-btn:hover, .complete-btn:hover {
+    opacity: 0.9;
+}
+
+.login-container button {
+    padding: 12px;
+    font-size: 16px;
+}
+
+.login-container p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.login-container a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
 .login-container .logo {
     display: block;
     margin: 0 auto 20px;
@@ -55,26 +129,11 @@ body {
     color: #333;
 }
 
-/* General button styling */
-button, .btn, .home-btn, .level-btn, .complete-btn {
-    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 16px;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-button:hover, .btn:hover, .home-btn:hover, .level-btn:hover, .complete-btn:hover { opacity: 0.9; }
-.level-btn.disabled,
-.complete-btn.disabled {
-    background-color: #ccc !important;
-    color: #666 !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
+body.dashboard {
+    display: block;
+    height: auto;
+    background-color: #f2f2f2;
+    padding-top: 20px;
 }
 
 /* Header section */
@@ -90,94 +149,84 @@ header.dashboard-header {
     left: 0;
     right: 0;
     z-index: 10;
-    flex-wrap: wrap;
-    min-height: 80px; /* Adjust as needed */
 }
-header.dashboard-header .logo h1 { font-size: 24px; color: #333; }
+
+header.dashboard-header .logo h1 {
+    font-size: 24px;
+    color: #333;
+}
+
 header.dashboard-header .dashboard-nav ul {
     list-style-type: none;
     display: flex;
-    gap: 40px;
-    padding: 12px;
+    gap: 20px;
 }
+
 header.dashboard-header .dashboard-nav ul li a {
     text-decoration: none;
     color: #333;
     font-size: 16px;
-    padding: 14px 24px;
-    border-radius: 20px;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
 }
+
 header.dashboard-header .dashboard-nav ul li a:hover {
     color: #007BFF;
-    background-color: #ddd !important;
 }
-header.dashboard-header .dashboard-nav ul li a.active {
-    background-color: dodgerblue !important;
-    color: white !important;
-}
+
 header.dashboard-header .user-info {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-header.dashboard-header .user-info span {
-    color: #333;
-    font-size: 16px;
-    font-weight: 500;
-}
+
 .logout-btn {
     background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
     color: white;
-    padding: 8px 24px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 999px;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    min-width: 100px;           /* Only one min-width */
-    text-align: center;
-    white-space: nowrap;
-    transition: background 0.2s, opacity 0.2s;
-    box-sizing: border-box;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
+
 .logout-btn:hover {
     opacity: 0.9;
 }
 
 /* Dashboard content */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px; /* or whatever it really is */
+    z-index: 100;
+    background-color: white; /* or your brand color */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* optional shadow */
+}
 .dashboard-content {
+    padding: 0 50px 50px 50px;  /* remove top padding! */
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding: 40px 20px 40px 20px; /* top, right, bottom, left */
-    background-color: #f0f4f8;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin: 40px auto 0 auto;
-    max-width: 1200px;
-    width: 100%;
+    align-items: flex-start;
     box-sizing: border-box;
 }
 .dashboard-section {
     background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 1200px;   /* Set your desired max width */
-    margin: 0 auto 40px auto; /* Center and add space below */
-    box-sizing: border-box;
+    max-width: 1200px;
 }
-.dashboard-section h1 { margin-bottom: 40px; }
-.dashboard-section h2 { margin-bottom: 20px; font-size: 22px; }
-.dashboard-buttons { display: flex; gap: 20px; }
+
+.dashboard-section h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.dashboard-buttons {
+    display: flex;
+    gap: 20px;
+}
 
 /* Table Tools for search and filters */
 .table-tools {
@@ -186,6 +235,7 @@ header.dashboard-header .user-info span {
     justify-content: space-between;
     align-items: center;
 }
+
 .table-tools input[type="search"],
 .table-tools select {
     padding: 10px;
@@ -193,6 +243,7 @@ header.dashboard-header .user-info span {
     border-radius: 5px;
     font-size: 16px;
 }
+
 .table-tools button {
     background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
     color: white;
@@ -202,21 +253,32 @@ header.dashboard-header .user-info span {
     cursor: pointer;
     font-size: 16px;
 }
-.table-tools button:hover { opacity: 0.9; }
 
-/* Table styling */
+.table-tools button:hover {
+    opacity: 0.9;
+}
+
+/* Styling for the table */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
+
 table th, table td {
     padding: 12px 15px;
     border: 1px solid #ccc;
     text-align: left;
 }
-table th { background-color: #007BFF; color: #fff; }
-table td { background-color: #f9f9f9; }
+
+table th {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+table td {
+    background-color: #f9f9f9;
+}
 
 /* Home page large buttons */
 .home-buttons {
@@ -225,6 +287,7 @@ table td { background-color: #f9f9f9; }
     gap: 30px;
     margin-top: 40px;
 }
+
 .home-btn {
     background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
     color: white;
@@ -236,47 +299,191 @@ table td { background-color: #f9f9f9; }
     text-align: center;
     transition: background-color 0.3s ease;
 }
-.home-btn:hover { opacity: 0.9; }
 
-/* Level grid and cards */
-.levels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+.home-btn:hover {
+    opacity: 0.9;
+}
+
+/* Level buttons on exams page */
+.level-buttons {
+    display: flex;
+    justify-content: center;
     gap: 20px;
-    width: 100%;
-    max-width: 1200px;
+    margin-bottom: 20px;
 }
-.level-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    min-height: 160px;
-    transition: transform 0.2s ease;
-}
-.level-card:hover { transform: scale(1.03); }
-.level-card.level-locked { background: #f0f0f0; }
-.level-title { font-size: 1.5em; margin-bottom: 10px; color: #333; }
-.level-grade { margin-bottom: 20px; font-size: 1em; color: #666; }
-.level-button {
-    padding: 10px 20px;
+
+.level-btn {
     background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
     color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 18px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.level-btn:hover {
+    opacity: 0.9;
+}
+
+/* Disabled level buttons */
+.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* Complete Course and Subject buttons */
+.complete-btn, .subject-buttons .complete-btn {
+    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 18px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.complete-btn:hover, .subject-buttons .complete-btn:hover {
+    opacity: 0.9;
+}
+
+/* Subject buttons on level pages */
+.subject-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Exam container styling */
+.exam-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+    margin-top: 80px; /* To prevent overlap with fixed header */
+}
+
+.exam-container h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Exam buttons styling */
+.exam-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.exam-buttons .btn {
+    background: linear-gradient(90deg, rgba(0, 146, 255, 1) 0%, rgba(228, 0, 255, 1) 100%);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.exam-buttons .btn:hover {
+    opacity: 0.9;
+}
+
+/* Question page styles */
+.exam-question {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.question-options label {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Navigation buttons for next/previous */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.navigation-buttons button, .navigation-buttons .btn {
+    flex: 1;
+    max-width: 150px;
+}
+
+/* Special button for finishing the exam */
+.finish-exam-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    text-decoration: none;
-    font-size: 1em;
+    font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s;
+    margin: 20px auto;
     display: inline-block;
+    text-decoration: none;
 }
-.level-button:hover {
-    background: linear-gradient(90deg, rgb(96, 184, 252) 0%, rgb(236, 98, 252) 100%);
+
+.finish-exam-btn:hover {
+    background-color: #218838;
 }
-.level-button.disabled {
-    background: #9e9e9e;
+
+.finish-exam-btn:disabled {
+    background-color: #cccccc;
     cursor: not-allowed;
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .navigation-buttons button {
+        max-width: 120px;
+    }
+
+    .finish-exam-btn {
+        padding: 10px 20px;
+    }
+}
+.finish-exam-btn {
+    background-color: #28a745; /* Green background */
+}
+.finish-exam-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Level Progress Styles */
+.level-progress {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+.level-progress th, .level-progress td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.level-progress th {
+    background-color: #f2f2f2;
+    color: #333;
 }
 
 /* Progress Table Styles */
@@ -305,18 +512,35 @@ table td { background-color: #f9f9f9; }
     font-weight: bold;
 }
 
-/* Level Progress Styles */
+/* Responsive Design */
+@media (max-width: 800px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .dashboard-nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .dashboard-nav ul li {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .progress-table th, .progress-table td {
+        padding: 8px;
+    }
+}
+
+/* New Level Completion Styles */
 .level-progress {
-    width: 100%;
-    border-collapse: collapse;
     margin-top: 40px;
 }
-.level-progress th, .level-progress td {
+.level-progress table th, .level-progress table td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: center;
 }
-.level-progress th {
+.level-progress table th {
     background-color: #f2f2f2;
     color: #333;
 }
@@ -331,157 +555,245 @@ table td { background-color: #f9f9f9; }
     font-weight: bold;
 }
 
-/* Dashboard Overview */
-.dashboard-overview {
-    display: flex;
-    gap: 30px;
-    padding-bottom: 30px;
-}
-
 /* Responsive Design */
-@media (max-width: 1200px) {
-    .levels-grid {
-        grid-template-columns: 1fr;
-    }
-}
-@media (max-width: 900px) {
-    .dashboard-content {
-        padding: 120px 5vw 30px 5vw; /* More top padding for taller header */
-    }
-    .dashboard-overview {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .dashboard-intro,
-    .performance-section {
-        min-width: 0;
-        width: 100%;
-    }
-    .dashboard-section {
-        padding: 10px;
-    }
-}
-@media (max-width: 800px) {
+@media (max-width: 600px) {
     .dashboard-header {
         flex-direction: column;
         align-items: flex-start;
-        padding: 10px 10px;
     }
     .dashboard-nav ul {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
-        padding: 6px;
     }
     .dashboard-nav ul li {
         margin-left: 0;
         margin-top: 10px;
     }
-    .dashboard-content {
-        padding: 140px 10px 30px 10px; /* Even more top padding for wrapped header */
+    .progress-table th, .progress-table td {
+        padding: 8px;
     }
-    .dashboard-section {
-        padding: 10px;
-        max-width: 100%;
-    }
-    .progress-table th, .progress-table td,
     .level-progress table th, .level-progress table td {
         padding: 8px;
     }
 }
-@media (max-width: 600px) {
-    .container { padding: 15px; width: 100%; }
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 8px 4px;
-    }
-    .dashboard-nav ul {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        padding: 4px;
-    }
-    .dashboard-nav ul li {
-        margin-left: 0;
-        margin-top: 8px;
-    }
-    .dashboard-content {
-        padding: 160px 4px 20px 4px;
-    }
-    .dashboard-section {
-        padding: 6px;
-        max-width: 100%;
-    }
-    .progress-table th, .progress-table td,
-    .level-progress table th, .level-progress table td {
-        padding: 6px;
-    }
-}
 
+.level-btn.disabled {
+    background-color: #ccc;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.level-btn {
+    background-color: #4A90E2;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+}
 /* AI CHAT TESTING*/
-/* Honestly not sure which of these will work, but my money is on the top one lol */
-/* Chat bubble button */
-#chat-bubble {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 20px;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
-}
+        /* Chat bubble button */
+        .chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
 
-/* Chat window */
-#chat-window {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 300px;
-    height: 400px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-}
+        /* Chat window */
+        .chat-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-/* Chat messages */
-#chat-messages {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
-    max-height: 350px;
-}
+        /* Chat messages */
+        .chat-messages {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 350px;
+        }
 
-/* Input field */
-#chat-input {
-    border-top: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-}
+        /* Input field */
+        .chat-input {
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+        }
 
-#chat-input input {
-    flex: 1;
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-}
+        .chat-input input {
+            flex: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
 
-#chat-input button {
-    margin-left: 5px;
-    padding: 5px 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .chat-input button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .markdown-body {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        /* Headers */
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3em;
+        }
+        
+        /* Paragraphs */
+        .markdown-body p {
+            margin: 1em 0;
+        }
+        
+        /* Lists */
+        .markdown-body ul, .markdown-body ol {
+            margin: 1em 0 1em 1.5em;
+        }
+        
+        /* Inline code */
+        .markdown-body code {
+            background: #f4f4f4;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        /* Code blocks */
+        .markdown-body pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 1em;
+            overflow-x: auto;
+            border-radius: 5px;
+        }
+        
+        /* Images */
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Blockquotes */
+        .markdown-body blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1em;
+            color: #555;
+            margin: 1em 0;
+        }
+        #markdown-body {
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+        
+        /* When fading out */
+        #markdown-body.fade-out {
+            opacity: 0;
+        }
+         /* AI CHAT TESTING*/
+/*Honestly not sure which of these will work, but my money is on the top one lol*/
+        /* Chat bubble button */
+        #chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Chat window */
+        #chat-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat messages */
+        #chat-messages {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        /* Input field */
+        #chat-input {
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+        }
+
+        #chat-input input {
+            flex: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #chat-input button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         /* AI CHAT TESTING*/
