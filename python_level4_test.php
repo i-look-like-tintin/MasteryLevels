@@ -392,7 +392,7 @@ function highlightPreset(){
             document.getElementById("code_correct").value = 0;
         });
 
-    return false; // Prevent form submission if needed
+    return true; 
 }
                   
 </script>
