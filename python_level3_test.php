@@ -384,14 +384,10 @@ function highlightPreset(){
                 matchBlastOff.test(outputLines[3]);
 
             if (hasForLoop && printsSomething && validOutput) {
-                //alert("✅ Countdown recognized! Nice work.");
                 document.getElementById("code_correct").value = 1;
-                document.getElementById("submissionForm").submit();
                 return true;
             } else {
-                //alert("❌ Output does not match expected countdown (3, 2, 1, blast off).");
                 document.getElementById("code_correct").value = 0;
-                document.getElementById("submissionForm").submit();
                 return true;
             }
         })
@@ -400,7 +396,7 @@ function highlightPreset(){
             document.getElementById("code_correct").value = 0;
         });
 
-    return false;
+    return true;
 }
 </script>
         </div>
