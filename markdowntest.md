@@ -4012,8 +4012,6 @@ In previous chapters, we learned that the arguments of the built-in function `pr
 
 We’ll now explore those and also f-strings and better ways to print numerical variables.
 
-<!-- SUBSECTION -->
-
 - **Given the following string:**
 
 ```python
