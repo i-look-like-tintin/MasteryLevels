@@ -235,7 +235,7 @@ while ($row = $questionResult->fetch_assoc()) {
     <h1 class="page-title">Python Level 5 Test</h1>
 
     <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
-    <input type="hidden" name="subject" value="Python Level 4">
+    <input type="hidden" name="subject" value="Python Level 5">
     <div style="text-align: right; margin-bottom: 20px;">
     <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
 </div>
