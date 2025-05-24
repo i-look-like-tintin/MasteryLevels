@@ -235,7 +235,7 @@ while ($row = $questionResult->fetch_assoc()) {
 <div class="main-content">
     <h1 class="page-title">Python Level 3 Test</h1>
 
-    <form action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
+    <form id="submissionForm" action="submit_exam.php" method="post" onsubmit="return runSkulptCode();"class="exam-form">
     <input type="hidden" name="subject" value="Python Level 3">
     <div style="text-align: right; margin-bottom: 20px;">
     <a href="python_splash.php" class="quit-button" onclick="return confirm('Are you sure you want to quit and return to the menu?');">Quit</a>
@@ -384,12 +384,14 @@ function highlightPreset(){
                 matchBlastOff.test(outputLines[3]);
 
             if (hasForLoop && printsSomething && validOutput) {
-                alert("✅ Countdown recognized! Nice work.");
+                //alert("✅ Countdown recognized! Nice work.");
                 document.getElementById("code_correct").value = 1;
+                document.getElementById("submissionForm").submit();
                 return true;
             } else {
-                alert("❌ Output does not match expected countdown (3, 2, 1, blast off).");
+                //alert("❌ Output does not match expected countdown (3, 2, 1, blast off).");
                 document.getElementById("code_correct").value = 0;
+                document.getElementById("submissionForm").submit();
                 return true;
             }
         })
