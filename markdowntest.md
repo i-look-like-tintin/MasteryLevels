@@ -2228,6 +2228,7 @@ You can perform various operations on lists, such as concatenation and repetitio
 - Of the 11 methods, the 3 methods that return a new value are .`copy()`, `.count()`, and `.index()` . The other 8 methods modify the lists themselves
 
 ---
+<!-- SUBSECTION -->
 
 ## Various ways of repeating commands on lists and beyond
 
@@ -2652,8 +2653,6 @@ rabbit
 
 ```
 
-<!-- SUBSECTION -->
-
 To extract sub-elements, we use double slicing, where the **first slicing—indicated by the first pair of  square brackets—extracts a sub-list and the second slicing—indicated by the second pair of square  brackets—extracts one or more sub-elements**. 
 
 To extract the sub-element `"cat"`, first we extract the sub-list of pets `animals[0]`, which is `['dog', 'cat']`. Then, from that sub-list, we slice `"cat"` at position `1` using `animals[0][1]`.
@@ -2661,6 +2660,8 @@ To extract the sub-element `"cat"`, first we extract the sub-list of pets `anima
 The string `"rabbit"` is the last element of the second sub-list of farm animals. So we access it with `animals[1][-1]`.
 
 The sub-elements from `"panda"` to `"giraffe"` are within `animals[2]`, and we slice it with `animals[2][:3]` to get the first three elements.
+
+<!-- SUBSECTION -->
 
 ### **Nested For Loops**
 
@@ -3342,6 +3343,7 @@ Dictionaries are extremely convenient when we need to save occurrences, that is,
     
     Similarly to the previous method, we start with the empty dictionary `letter_counter` (line 1) and continue with a for loop through elements (line 3). The four lines of code containing the if/else construct are replaced by one single line containing an assignment, the method `.get()`, and a sum (line 4). The method `.get()` contains two arguments, `letter` and `0`, and it acts as follows: if the key does not exist, `.get()` returns the second argument; if the key already exists, `.get()` returns the corresponding value.
     
+<!-- SUBSECTION -->
 
 ### **Compressing Information**
 
@@ -3515,8 +3517,6 @@ reward
 
 The start is the beginning of the string, so we can omit it. Similarly, the stop is the end of the string, so we can omit it too. The *step* is 2. The outcome is `reward` (line 1).
 
-<!-- SUBSECTION -->
-
 - **Extract every second character and invert the outcome:**
 
 ```python
@@ -3534,6 +3534,8 @@ Print `two_ways` from the end to the beginning with a step of minus two → `dra
 Opposite to the above, the *start* is the end of the string, and the stop is the beginning of the string; therefore, we can omit both. Since we are going backwards, the step is `-2`.
 
 (Did you know that the reverse of *reward* is *drawer*?)
+
+<!-- SUBSECTION -->
 
 ### **“Arithmetic” Operations on Strings**
 
@@ -3995,6 +3997,9 @@ To change to uppercase the first characters of all the words, we use `.title()` 
 
 Finally, to swap characters from uppercase to lowercase and vice versa, we use `.swapcase()` (line 10).
 
+
+<!-- SUBSECTION -->
+
 ### Printing Variables
 
 Printing is particularly useful in coding to check for correctness of operations and algorithms.
@@ -4444,6 +4449,8 @@ By creating a function, we encapsulate this logic in one place, allowing us to c
 
 In addition, functions allow us to break down complex problems into smaller, manageable tasks. Each function can focus on a specific subtask, making it easier to understand and modify.
 
+<!-- SUBSECTION -->
+
 ### **Recap**
 
 - Functions are blocks of code that accomplish a specific task. They are crucial for code reuse and modularisation.
@@ -4731,6 +4738,8 @@ Before concluding this Chapter, let’s briefly analyze how we modularized our c
 3. provides the final output—that is, it returns the dictionary and the number of customers. 
 
 In some coding examples outside this book, you may find that the main function is actually called `main()`. The other two functions—`create_username()` and `create_password()`—are satellite functions because each of them performs one specific task. How do the main function and satellite functions interact? Through the flow of inputs and outputs. The main function sends inputs to the satellite functions—in our case, `first_name` and `last_name` are sent to `create_username()`—and receives outputs—`username` from `create_username()` and `password` from `create_password()`. The received outputs can then be used to create new variables such as the dictionary `db` in our example—or as inputs for subsequent satellite functions, as you will see in the coding exercise at the end of the Chapter.
+
+<!-- SUBSECTION -->
 
 ### **Recap**
 
@@ -5154,6 +5163,8 @@ At this point, we start the “way up.” Let’s go through the black numerical
 Now that the functioning mechanism is clear, let’s briefly formalize the syntax of recursive functions. They typically contain an if/else construct where statements return or print a value. One of the two statements is called the base case because it ensures that the recursion will stop—in our example, `return 1` (line 22). The other statement is called the recursive case because it contains a call to the function itself—in our example, `return factorial_rec(n - 1) * n` (line 18).
 
 Let’s conclude with some advantages and disadvantages of recursive functions. On the one hand, recursive functions contain compact code and are appropriate when solving intrinsically recursive problems—see the "In more depth" session at the end of this chapter. On the other hand, they are computationally expensive because each call occupies space in memory, which is released only when closing the functions during the “way up.” Finally, recursive functions can be challenging to debug.
+
+<!-- SUBSECTION -->
 
 ### **Recap**
 
