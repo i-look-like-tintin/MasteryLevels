@@ -404,7 +404,7 @@ secret_number = ${secret_number}
             return true;
         });
 
-    return false;
+    return true;
 }
                   
 </script>
