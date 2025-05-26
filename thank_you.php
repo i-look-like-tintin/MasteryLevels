@@ -49,7 +49,8 @@ if ($row = $result->fetch_assoc()) {
 }
 
 $subject = isset($_GET['subject']) ? trim($_GET['subject']) : 'Unknown Subject';
-
+$parts = explode(' ', $subject);
+$number = (int)end($parts);
 $score = isset($_GET['score']) ? intval($_GET['score']) : 0;
 $total = isset($_GET['total']) ? intval($_GET['total']) : 0;
 
@@ -177,7 +178,7 @@ $stmt->close();
 
     <div class="button-group">
         <a href="dashboard.php" class="dashboard-button">Return to Dashboard</a>
-        <a href="python_level1_test.php" class="retry-button">Retry Quiz</a>
+        <?php echo "<a href='python_level".$number."_test.php' class='retry-button'>Retry Quiz</a>"?>
         <a href="logout.php" class="logout-button">Logout</a>
     </div>
 </div>
