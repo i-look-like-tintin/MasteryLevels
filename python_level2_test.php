@@ -353,37 +353,55 @@ function highlightPreset(){
         return Sk.builtinFiles["files"][x];
 }
 
-    function runSkulptCode() {
-        const code = document.getElementById("codeEditor").value;
-        const outputElement = document.getElementById("output");
-        const resultField = document.getElementById("code_correct");
-        outputElement.innerHTML = ""; // Clear previous output
-        validateCode();
-        if (outputElement.innerHTML === "['ANU']"){
-            resultField.value = 1;
-            return true;
-        }
-        else{
-            resultField.value=0;
-            return true;
-        }
+    async function runSkulptCode() {
+    const code = document.getElementById("codeEditor").value;
+    const outputElement = document.getElementById("output");
+    const resultField = document.getElementById("code_correct");
+    outputElement.innerHTML = ""; // Clear previous output
+    
+    // Wait for validateCode to complete
+    await validateCode();
+    
+    // Check the output after execution is complete
+    console.log("Output:", outputElement.innerHTML);
+    
+    // Check if output matches expected result
+    if (outputElement.innerHTML.trim() === "['ANU']") {
+        resultField.value = 1;
+        return true;
+    } else {
+        resultField.value = 0;
+        return true;
     }
-        function validateCode(){
-            Sk.configure({
-                output: function (text) {
-                    outputElement.innerHTML += text.replace(/\n/g, "<br>");
-                },
-                read: builtinRead,
-                inputfun: function (promptText) {
-                    return window.prompt(promptText); // Simple browser prompt
-                },
-                inputfunTakesPrompt: true
-            });
-        Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
+}
+
+async function validateCode() {
+    const code = document.getElementById("codeEditor").value;
+    const outputElement = document.getElementById("output");
+    
+    return new Promise((resolve, reject) => {
+        Sk.configure({
+            output: function (text) {
+                outputElement.innerHTML += text.replace(/\n/g, "");
+            },
+            read: builtinRead,
+            inputfun: function (promptText) {
+                return window.prompt(promptText);
+            },
+            inputfunTakesPrompt: true
+        });
+        
+        Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("", false, code))
+            .then(() => {
+                resolve(); // Resolve when execution is complete
+            })
             .catch((err) => {
-                outputElement.innerHTML += `<br><span style="color: red;">${err.toString()}</span>`;
+                outputElement.innerHTML += `
+${err.toString()}`;
+                resolve(); // Still resolve even on error so we can check the output
             });
-    }              
+    });
+}
 </script>
         </div>
 

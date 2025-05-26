@@ -201,8 +201,7 @@ foreach ($levelGroups as $group) {
     $groupComplete = isset($userGrades[$groupResultKey]) && $userGrades[$groupResultKey]['percentage'] >= 70; //Requires 70% to unlock next level
 
     $isLocked = false;
-    //TODO: Reset this
-    //$isLocked = !$canAccessNext;
+    $isLocked = !$canAccessNext;
     echo "<div class='level-card " . ($isLocked ? "level-locked" : "") . "'>";
     echo "<h2 class='level-title'>{$displayTitle}</h2>";
     echo "<p class='level-grade'>" . ($groupComplete ? "Completed with > 70%" : "Not Completed") . "</p>";
