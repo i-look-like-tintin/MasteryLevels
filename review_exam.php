@@ -173,7 +173,6 @@ $conn->close();
                                 echo htmlspecialchars($question['question']); ?></td>
                         <td><?php echo htmlspecialchars(strtoupper($question['selected_option'] ?? 'Not Answered')); ?>
                         <?php echo " (" . htmlspecialchars($question['selected_answer'], ENT_QUOTES) . ")"; ?>
-                <!-- TODO: Consider echoing answer here -->
                         </td>
                         <td><?php echo htmlspecialchars(strtoupper($question['correct_option'])); ?>
                             <?php echo " (" . htmlspecialchars($question['correct_answer'], ENT_QUOTES) . ")"; ?>
@@ -201,7 +200,7 @@ $conn->close();
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <?php //TODO: Check if code was marked correct
+        <?php
                         if (!empty($question['submitted_code']) && str_contains($subject, "Python Level")) {
                             $q = htmlspecialchars($question['code_question'], ENT_QUOTES);
                             //$_SESSION['codingQuestion'] = str_replace(["\n", "\r", "'"], ['', '', ''], $q);
