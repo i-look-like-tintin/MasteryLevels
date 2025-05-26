@@ -179,7 +179,7 @@ $stmt->close();
     <div class="button-group">
         <a href="dashboard.php" class="dashboard-button">Return to Dashboard</a>
         <?php echo "<a href='python_level".$number."_test.php' class='retry-button'>Retry Quiz</a>"?>
-        <a href="logout.php" class="logout-button">Logout</a>
+        <a href="login.php" class="logout-button">Logout</a>
     </div>
 </div>
 
