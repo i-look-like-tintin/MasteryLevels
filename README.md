@@ -6,7 +6,7 @@ is stored in MS Teams only)
 
 
 ## Installation Instructions:
-1. 
+As covered in User Guide
 
 
 
